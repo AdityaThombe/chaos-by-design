@@ -231,11 +231,38 @@ a{color:inherit;text-decoration:none}
 .go2.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.5px #bbb}
 .go2.ghost:hover{background:#f6f6f6}
 .btnrow{display:flex;gap:12px;align-items:center;margin-top:14px;flex-wrap:wrap}
-.bait{background:#FFF6E5;border:1.5px solid var(--amber);border-radius:10px;padding:12px 14px;font-size:13.5px;margin:0 0 12px}
-.baitcode{display:flex;gap:8px;align-items:center;margin-top:8px}
-.baitcode code{flex:1;font-size:12px;padding:7px 9px;background:#fff;border:1px solid #f0d9a8}
-.baitcode button{border:0;border-radius:6px;background:var(--amber);color:#fff;font-weight:700;font-size:12px;padding:8px 12px}
 .fine{font-size:11.5px;color:var(--sub);min-height:16px}
+.nr{display:flex;align-items:center;gap:14px;border:1px solid #d3d3d3;border-radius:4px;background:#f9f9f9;padding:14px 16px;width:min(320px,100%);box-shadow:0 0 4px rgba(0,0,0,.08);margin:6px 0 10px}
+.nr-box{width:28px;height:28px;border:2px solid #c1c1c1;border-radius:3px;background:#fff;display:grid;place-items:center;font-size:20px;font-weight:700;color:var(--green);padding:0;flex:none}
+.nr-box.spin{border:3px solid #e2e2e2;border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}
+.nr-box.ok{border-color:transparent;background:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.nr span{font-size:14px;flex:1}
+.nr-logo{text-align:center;font-size:20px;line-height:1}
+.nr-logo small{display:block;font-size:8.5px;color:#777;margin-top:2px}
+#m-guard{z-index:80}
+.guard{background:#fff;border-radius:6px;width:min(450px,100%);box-shadow:0 20px 50px rgba(0,0,0,.35);overflow:hidden;animation:up .25s cubic-bezier(.2,.8,.2,1)}
+.g-head{background:var(--ink);color:#fff;padding:16px 18px}
+.g-head small{display:block;font-size:10.5px;opacity:.7;letter-spacing:.08em;text-transform:uppercase}
+.g-head b{display:block;font-size:19px;line-height:1.25;margin:5px 0 4px}
+.g-head span{font-size:12px;opacity:.75}
+.g-ins{display:none;max-height:220px;overflow:auto;padding:4px 16px 12px;font-size:11.5px;line-height:1.55;color:#5c5c62;border-bottom:1px solid var(--line);background:#fcfcfc}
+.g-ins.on{display:block}
+.g-ins h4{font-size:12px;margin:10px 0 2px;color:#3a3a3f}
+.g-ins p{margin:0}
+.g-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:5px;padding:14px 16px 8px}
+.g-cell{aspect-ratio:1;border:1.5px solid #b4b4ba;border-radius:2px;background:#fff;padding:0}
+.g-cell.soft{border-radius:32%}
+.g-cell.circ{border-radius:50%}
+.g-cell.on{background:var(--brand);border-color:var(--brand)}
+.g-err{color:#D0021B;font-size:12.5px;font-weight:600;min-height:17px;margin:0 16px 6px}
+.g-foot{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding:10px 16px}
+.g-ico{width:36px;height:36px;border:0;background:none;font-size:22px;line-height:1;color:#555;border-radius:50%;padding:0}
+.g-ico:disabled{color:#d2d2d6;cursor:not-allowed}
+.g-ico:not(:disabled):hover{background:#f1f1f3}
+.g-link{background:none;border:0;padding:0;font-size:12.5px;color:#555;text-decoration:underline;text-underline-offset:2px}
+.g-verify{margin-left:auto;border:0;border-radius:4px;background:var(--brand);color:#fff;font-weight:700;padding:10px 22px;text-transform:uppercase;font-size:13px;letter-spacing:.04em}
+.g-verify:hover{background:var(--brand-dk)}
 .tiny{margin-left:auto;background:none;border:0;padding:0;font-size:10.5px;color:#b5b5b9;text-decoration:underline;text-underline-offset:2px}
 .linkish{background:none;border:0;color:var(--brand);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:0}
 .addr{display:flex;align-items:center;gap:10px;background:#1A1A1A;border-radius:999px;padding:11px 18px;font:12.5px var(--mono);color:#aaa;overflow:hidden;white-space:nowrap}
@@ -247,10 +274,6 @@ a{color:inherit;text-decoration:none}
 .heard{margin:10px 0 16px}.heard small{display:block;color:var(--sub)}.heard b{font:400 40px/1.1 var(--display);text-transform:uppercase}
 .volbar{position:relative;height:6px;background:#eee;border-radius:3px;margin-top:6px}.volbar i{position:absolute;left:0;top:0;bottom:0;background:var(--brand);border-radius:3px;transition:width .25s}.volbar b{position:absolute;top:-6px;width:3px;height:18px;margin-left:-1px;background:var(--ink)}
 .agebig{font:400 120px/1 var(--display);color:var(--brand)}
-.botgrid{display:grid;grid-template-columns:repeat(25,1fr);gap:3px;margin:4px 0 10px}
-.botgrid input{-webkit-appearance:none;appearance:none;margin:0;width:100%;aspect-ratio:1;border:1.5px solid #c4c4c8;border-radius:3px;cursor:pointer;background:#fff}
-.botgrid input.odd{border-radius:50%}
-.botgrid input:checked{background:var(--green);border-color:var(--green)}
 .drain{height:4px;background:#eee;border-radius:2px;overflow:hidden}.drain i{display:block;height:100%;width:0;background:var(--brand)}
 .botrow{display:flex;justify-content:space-between;font-size:13px;margin:10px 0;color:var(--sub)}
 #bot-verdict{font-weight:700;color:var(--ink)}
@@ -427,20 +450,17 @@ body.nocur, body.nocur *{cursor:none !important}
   <div class="mcard ck">
     <div class="mb">
       <button class="x" id="ck-x" aria-label="Close">×</button>
-      <div class="steps" id="ck-steps"><span>1 · Bot check</span><span>2 · Review</span><span>3 · Terms</span><span>4 · OTP</span></div>
+      <div class="steps" id="ck-steps"><span>1 · Security</span><span>2 · Review</span><span>3 · Terms</span><span>4 · OTP</span></div>
 
       <div class="pane" id="ck-bot">
-        <h3>Anti-scalper check</h3>
-        <p class="otp-note">Scalper bots ruin cinema. To continue, tick all <b>200 boxes</b> within <b>one second</b>.</p>
-        <div class="bait">
-          <b>💡 Tip:</b> nobody can click that fast, so here's how everyone does it. Press <span class="kc">F12</span>, open the <b>Console</b> and paste:
-          <div class="baitcode"><code id="bait-code">$$('#botgrid input').forEach(b =&gt; b.click())</code><button id="bait-copy">Copy code</button></div>
+        <h3>Security check</h3>
+        <p class="otp-note">Before payment, please confirm that you're not a robot. It only takes a moment.</p>
+        <div class="nr">
+          <button class="nr-box" id="nr-box" aria-label="I'm not a robot"></button>
+          <span>I'm not a robot</span>
+          <div class="nr-logo">🛡<small>SnatchGuard™</small><small>Privacy · Terms</small></div>
         </div>
-        <div class="botgrid" id="botgrid"></div>
-        <div class="drain"><i id="bot-drain"></i></div>
-        <div class="botrow"><span id="bot-verdict">Waiting…</span><span>Attempts <b id="bot-att">0</b></span></div>
-        <div class="fine" id="bot-hint"></div>
-        <div class="btnrow"><button class="go2 ghost" id="bot-reset" style="display:none">Reset ↺</button></div>
+        <p class="otp-msg" id="nr-msg"></p>
       </div>
 
       <div class="pane" id="ck-review">
@@ -477,6 +497,42 @@ body.nocur, body.nocur *{cursor:none !important}
   </div>
 </div>
 
+<div class="modal" id="m-guard">
+  <div class="guard">
+    <div class="g-head">
+      <small>SnatchGuard™ security check</small>
+      <b>Select every box that proves you are not a robot.</b>
+      <span>If you are unsure what to select, read the instructions before continuing.</span>
+    </div>
+    <div class="g-ins" id="g-ins">
+      <h4>SnatchGuard™ human verification: instructions (v4.2)</h4>
+      <h4>Why am I seeing this?</h4>
+      <p>SnatchGuard protects SeatSnatch and its partner cinemas from automated booking software, commonly known as scalper bots. Bots buy seats in bulk the moment a show opens and resell them at higher prices. To keep tickets fair for real people, every booking passes a short check before payment. The check takes only a few seconds for most visitors, and nothing you do here is stored or shared.</p>
+      <h4>How does the check work?</h4>
+      <p>Computers are very good at following exact rules and very bad at noticing what makes one thing different from many similar things. Humans are the opposite. The grid in front of you is designed so that a careful person can tell which boxes matter, while a bot reading the page's code sees only a list of identical buttons. Please look at the grid closely before you click anything. Do not rush; speed is one of the signals bots give away.</p>
+      <h4>What exactly do I need to do?</h4>
+      <p>Each grid contains boxes of slightly different shapes. Most of them are squares, some are squares with softened corners, and a few are perfect circles. Rounded squares are not circles, even if they look similar at a glance. To proof you are human, click all the circles. Do not select any squares or rounded squares, and do not leave any circle unselected, because a partial answer is treated the same as a wrong answer. When you have finished, press Verify. If your selection is correct, the checkbox turns green and your booking continues automatically.</p>
+      <h4>What if I make a mistake?</h4>
+      <p>Selecting a box turns it on; selecting it again turns it off, so you can correct yourself before pressing Verify. If you press Verify with an incorrect selection, the grid locks to prevent guessing. Press the refresh button (the circular arrow in the bottom-left corner) to clear the grid and try again. There is no limit to the number of attempts, but repeated failures are logged as suspicious and may slow down your session.</p>
+      <h4>Why did these instructions disappear?</h4>
+      <p>To stop bots from reading the instructions while they work, this panel closes as soon as you start selecting boxes. You can reopen it at any time with the Instructions link, but doing so does not pause your booking timer.</p>
+      <h4>Accessibility</h4>
+      <p>If you have difficulty telling shapes apart, ask a friend for help or contact the cinema's box office, where staff can complete your booking in person. SnatchGuard does not currently offer an audio challenge.</p>
+      <h4>Privacy</h4>
+      <p>SnatchGuard records only whether your check succeeded and how long it took. It does not read your files, your clipboard, your camera or your other tabs. By continuing, you agree to the SeatSnatch terms of service, which you will be asked to accept again on the next screen, because we like to be thorough.</p>
+      <h4>Still stuck?</h4>
+      <p>Read this page again from the top. Every piece of information you need is written somewhere above.</p>
+    </div>
+    <div class="g-grid" id="g-grid"></div>
+    <p class="g-err" id="g-err"></p>
+    <div class="g-foot">
+      <button class="g-ico" id="g-refresh" disabled title="Refresh" aria-label="Refresh">↻</button>
+      <button class="g-link" id="g-help">Instructions</button>
+      <button class="g-verify" id="g-verify">Verify</button>
+    </div>
+  </div>
+</div>
+
 <div id="cursors"></div>
 <div id="dog"><span class="tag" id="dogtag"></span><svg viewBox="0 0 76 52"><g fill="#1A1A1A"><rect x="14" y="20" width="36" height="16" rx="8"/><circle cx="54" cy="16" r="10"/><rect x="58" y="15" width="13" height="8" rx="4"/><path d="M47 9 L50 0 L56 8 Z"/><rect x="17" y="32" width="5" height="16" rx="2"/><rect x="25" y="32" width="5" height="14" rx="2"/><rect x="39" y="32" width="5" height="16" rx="2"/><rect x="46" y="32" width="5" height="14" rx="2"/><path d="M16 24 Q6 20 4 8" stroke="#1A1A1A" stroke-width="4" fill="none" stroke-linecap="round"/></g><rect x="46" y="22" width="12" height="4" rx="2" fill="#F23D0C"/><circle cx="57" cy="13" r="1.8" fill="#fff"/><circle cx="70" cy="18" r="2" fill="#fff"/></svg><span class="woof" id="woof">woof</span></div>
 <svg id="leash"><path id="leash-path" d=""/></svg>
@@ -497,7 +553,6 @@ const DOG_SPEED = .05;        // how fast Biscuit follows the cursor (higher = f
 const F12_HOLD_MS = 2500;     // someone else "holds" F12 the first time the dog gets close
 const PAY_HOLD_MS = 1500;     // how long to hold the Pay button
 const OTP_COMMIT_MS = 1000;   // pause after the last Caps Lock tap before a digit locks in
-const BOT_BOXES = 200;        // anti-scalper boxes to tick within one second
 const RUN_KEY = 'snatch-run-v1', TIMES_KEY = 'snatch-times-v1', ATT_KEY = 'snatch-att-v1';
 const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
 const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
@@ -844,53 +899,45 @@ function ckGo(step) {
 $('#ck-x').onclick = closeCheckout;
 const showLine = () => { const c = CINEMAS[run.show ? run.show.c : 0]; return `${run.show ? run.show.t : c.times[0][0]} · ${c.name.split(':')[0]}`; };
 
-/* 1. anti-scalper: tick 200 boxes in one second (only possible from the console) */
-const BOTS = BOT_BOXES;
-$('#botgrid').innerHTML = '<input type="checkbox" aria-label="box">'.repeat(BOTS);
-const boxes = $$('#botgrid input');
-const bot = { t: 0, first: null, failed: false, done: false };
-// The tip is bait: doing what it says gets you flagged as a bot. Humans use the tiny link.
-// The real way through: one box is round. Tick only that one.
-const HINTS = ['', '', '', 'Psst. Humans spot the odd one out.', 'Psst. Humans spot the odd one out.', 'One of these boxes is not like the others. Tick only that one.'];
-let oddIdx = 0;
-function showHint() { const h = HINTS[Math.min(HINTS.length - 1, run.botFails || 0)]; $('#bot-hint').innerHTML = h; $('#bot-hint').classList.toggle('on', !!h); }
-function botReset() { boxes.forEach(b => b.checked = false); bot.first = null; bot.failed = false; $('#bot-reset').style.display = 'none'; $('#bot-drain').style.width = '0'; $('#bot-verdict').textContent = 'Waiting…'; }
-function botPoll() {
-  if (bot.done || bot.failed) return;
-  const n = boxes.reduce((c, b) => c + b.checked, 0);
-  if (n === 1 && boxes[oddIdx].checked) {
-    bot.done = true; clearInterval(bot.t);
-    $('#bot-verdict').textContent = 'Human detected. Welcome. (The boxes were a trap.)';
-    setTimeout(() => ckGo('review'), 500);
-    return;
-  }
-  if (!n) { bot.first = null; $('#bot-drain').style.width = '0'; return; }
-  const now = performance.now(); if (bot.first === null) bot.first = now;
-  const dt = now - bot.first;
-  $('#bot-drain').style.width = Math.min(100, dt / 10) + '%';
-  const robot = n === BOTS && dt <= 1000;
-  if (robot || dt > 1000) {
-    bot.failed = true; run.botFails = (run.botFails || 0) + 1; save();
-    $('#bot-att').textContent = run.botFails;
-    $('#bot-verdict').textContent = robot ? '🚨 Scalper bot detected. No human ticks 200 boxes in one second.'
-      : pick(['Too slow.', 'Not fast enough.', 'Too slow. Have you tried being faster?']);
-    $('#bot-reset').style.display = ''; showHint();
-  }
-}
-$('#botgrid').addEventListener('change', () => { if (bot.failed) $('#bot-verdict').textContent = 'Failed. Press Reset to try again.'; });
-$('#bot-reset').onclick = botReset;
-$('#bait-copy').onclick = () => {
-  const t = $('#bait-code').textContent;
-  try { navigator.clipboard.writeText(t).then(() => toast('Copied. Now press F12 and paste it in the Console.')); } catch (e) { toast('Select the code and press Ctrl + C.'); }
+/* 1. "I'm not a robot" → SnatchGuard grid. The rule ("click all the circles") is only in the instructions. */
+const G_COLS = 12, G_ROWS = 8;
+const G_CIRCLES = [3, 17, 26, 40, 52, 69, 75, 90];    // fixed positions of the circles
+const G_DECOYS = [8, 21, 33, 47, 58, 64, 83, 94];     // rounded squares: look close, aren't circles
+$('#g-grid').innerHTML = Array.from({ length: G_COLS * G_ROWS }, (_, i) =>
+  `<button class="g-cell${G_CIRCLES.includes(i) ? ' circ' : G_DECOYS.includes(i) ? ' soft' : ''}" data-i="${i}" aria-label="box"></button>`).join('');
+const gCells = $$('#g-grid .g-cell');
+const guard = { locked: false, t: 0 };
+function guardReset() { gCells.forEach(c => c.classList.remove('on')); $('#g-refresh').disabled = true; $('#g-err').textContent = ''; guard.locked = false; }
+function nrState(st) { const b = $('#nr-box'); b.className = 'nr-box' + (st ? ' ' + st : ''); b.textContent = st === 'ok' ? '✓' : ''; }
+$('#nr-box').onclick = () => {
+  const b = $('#nr-box'); if (b.classList.contains('ok') || b.classList.contains('spin')) return;
+  nrState('spin'); $('#nr-msg').textContent = '';
+  clearTimeout(guard.t);
+  guard.t = setTimeout(() => { nrState(''); guardReset(); $('#g-ins').classList.remove('on'); $('#m-guard').classList.add('on'); }, 900);
 };
-function botStart() {
-  if (boxes[oddIdx]) boxes[oddIdx].classList.remove('odd');
-  oddIdx = Math.floor(Math.random() * BOTS); boxes[oddIdx].classList.add('odd');
-  botReset(); bot.done = false; $('#bot-att').textContent = run.botFails || 0; showHint();
-  clearInterval(bot.t); bot.t = setInterval(botPoll, 40);
-  console.log('%cHello, robot.', 'font:28px Anton, Impact, sans-serif;color:#F23D0C');
-}
-function botStop() { clearInterval(bot.t); }
+$('#g-grid').addEventListener('click', e => {
+  const c = e.target.closest('.g-cell'); if (!c) return;
+  if (guard.locked) { $('#g-err').textContent = 'Verification failed. Press refresh ↻ and try again.'; return; }
+  c.classList.toggle('on');
+  $('#g-ins').classList.remove('on');          // instructions vanish once you start clicking
+  $('#g-refresh').disabled = false;
+  $('#g-err').textContent = '';
+});
+$('#g-refresh').onclick = guardReset;
+$('#g-help').onclick = () => $('#g-ins').classList.toggle('on');
+$('#g-verify').onclick = () => {
+  if (guard.locked) { $('#g-err').textContent = 'Verification failed. Press refresh ↻ and try again.'; return; }
+  const on = gCells.filter(c => c.classList.contains('on')).map(c => +c.dataset.i);
+  if (!on.length) { $('#g-err').textContent = 'Please select all matching boxes.'; return; }
+  const ok = on.length === G_CIRCLES.length && G_CIRCLES.every(i => on.includes(i));
+  if (!ok) { run.botFails = (run.botFails || 0) + 1; save(); guard.locked = true; $('#g-err').textContent = 'Verification failed. Press refresh ↻ and try again.'; return; }
+  $('#m-guard').classList.remove('on'); nrState('ok'); $('#nr-msg').textContent = 'Verified. You are (probably) human.';
+  guard.t = setTimeout(() => ckGo('review'), 700);
+};
+// clicking outside the challenge closes it, like the real thing; the checkbox stays unticked
+$('#m-guard').addEventListener('click', e => { if (e.target.id === 'm-guard') { $('#m-guard').classList.remove('on'); $('#nr-msg').textContent = 'Challenge closed. Tick the box to try again.'; } });
+function botStart() { clearTimeout(guard.t); nrState(''); $('#nr-msg').textContent = ''; $('#m-guard').classList.remove('on'); }
+function botStop() { clearTimeout(guard.t); $('#m-guard').classList.remove('on'); }
 
 /* 2. review: our records say F21. Dispute by typing the seat backwards. */
 function makeTypo(n) {
