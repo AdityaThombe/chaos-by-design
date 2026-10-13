@@ -231,6 +231,7 @@ a{color:inherit;text-decoration:none}
 .go2.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.5px #bbb}
 .go2.ghost:hover{background:#f6f6f6}
 .btnrow{display:flex;gap:12px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.tiny{margin-left:auto;background:none;border:0;padding:0;font-size:10.5px;color:#b5b5b9;text-decoration:underline;text-underline-offset:2px}
 .linkish{background:none;border:0;color:var(--brand);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:0}
 .addr{display:flex;align-items:center;gap:10px;background:#1A1A1A;border-radius:999px;padding:11px 18px;font:12.5px var(--mono);color:#aaa;overflow:hidden;white-space:nowrap}
 .addr .dots{display:flex;gap:5px;flex:none}.addr .dots i{width:8px;height:8px;border-radius:50%;background:#444}
@@ -239,6 +240,7 @@ a{color:inherit;text-decoration:none}
 .addr .caret{width:2px;height:15px;background:var(--brand);animation:blink 1s steps(1) infinite;flex:none}
 .uparrow{font:400 34px/1 var(--script);color:var(--brand);margin:2px 0 0 26px;transform:rotate(-5deg)}
 .heard{margin:10px 0 16px}.heard small{display:block;color:var(--sub)}.heard b{font:400 40px/1.1 var(--display);text-transform:uppercase}
+.volbar{position:relative;height:6px;background:#eee;border-radius:3px;margin-top:6px}.volbar i{position:absolute;left:0;top:0;bottom:0;background:var(--brand);border-radius:3px;transition:width .25s}.volbar b{position:absolute;top:-6px;width:3px;height:18px;margin-left:-1px;background:var(--ink)}
 .agebig{font:400 120px/1 var(--display);color:var(--brand)}
 .botgrid{display:grid;grid-template-columns:repeat(25,1fr);gap:3px;margin:4px 0 10px}
 .botgrid input{-webkit-appearance:none;appearance:none;margin:0;width:100%;aspect-ratio:1;border:1.5px solid #c4c4c8;border-radius:3px;cursor:pointer;background:#fff}
@@ -387,7 +389,7 @@ body.nocur, body.nocur *{cursor:none !important}
   <div class="mcard ck">
     <div class="mb">
       <button class="x" id="si-x" aria-label="Close">×</button>
-      <div class="steps" id="si-steps"><span class="on">1 · Sign in</span><span>2 · Age check</span></div>
+      <div class="steps" id="si-steps"><span class="on">1 · Sign in</span><span>2 · Age check</span><span>3 · Alerts</span></div>
       <div class="pane on" id="si-name">
         <h3>Sign in to book</h3>
         <p class="otp-note">For your security, SeatSnatch has no login form. You sign in through your <b>address bar</b>: click it, go to the very end, type <code>#</code> followed by your name, and press <b>Enter</b>.</p>
@@ -403,6 +405,13 @@ body.nocur, body.nocur *{cursor:none !important}
         <small id="age-math" style="color:var(--sub);font-family:var(--mono)"></small>
         <p class="otp-msg" id="age-note" style="margin:10px 0 14px"></p>
         <button class="go2" id="age-ok" disabled>Verify age</button>
+      </div>
+      <div class="pane" id="si-vol">
+        <h3>Booking alerts</h3>
+        <p class="otp-note" id="vol-text">Set your alert volume to exactly <b>67</b>. Our volume control is your <b>browser zoom</b>.</p>
+        <div class="agebig" id="vol-out">100</div>
+        <div class="volbar"><i id="vol-fill"></i><b id="vol-tgt"></b></div>
+        <p class="otp-msg" id="vol-note" style="margin:10px 0 0"></p>
       </div>
     </div>
   </div>
@@ -430,7 +439,7 @@ body.nocur, body.nocur *{cursor:none !important}
         <div class="summary" id="rv-sum"></div>
         <p class="err" id="rv-err"></p>
         <div class="dispute" id="rv-dispute"><small>To correct a record, type the correct seat <b>backwards</b>. It's for fraud prevention. Probably.</small><input class="field" id="rv-in" placeholder="e.g. 7B" autocomplete="off" spellcheck="false"></div>
-        <div class="btnrow"><button class="go2" id="rv-ok">Looks good, continue</button><button class="linkish" id="rv-wrong">Something's wrong?</button></div>
+        <div class="btnrow"><button class="go2" id="rv-ok">Looks good, continue</button><button class="tiny" id="rv-wrong">report an issue</button></div>
       </div>
 
       <div class="pane" id="ck-terms">
@@ -522,7 +531,7 @@ $('#book').onclick = () => {
             name: '', age: 0, ck: 'bot', inCk: false, seatFixed: false, botFails: 0, wrongSeat: pick(['F21', 'E12', 'G12', 'F13', 'F11', 'P12']) };
     save(); clearHash();
   }
-  if (!run.name || !run.age) openSignin(); else go('shows');
+  if (!run.name || !run.age || !run.vol) openSignin(); else go('shows');
 };
 
 /* ---------- SIGN IN through the address bar, AGE from the window width ---------- */
@@ -543,17 +552,40 @@ function updAge() {
   $('#age-note').textContent = a > 30 ? `${a}? Student pricing is for 30 and under. Make the window narrower.`
     : a < 13 ? 'Under 13? This film is UA13+. Make the window wider.' : `You're ${a}. We'll take your word for it.`;
 }
-function siPane(p) {
-  $('#si-name').classList.toggle('on', p === 'name'); $('#si-age').classList.toggle('on', p === 'age');
-  const sp = $$('#si-steps span'); sp[0].className = p === 'name' ? 'on' : 'done'; sp[1].className = p === 'age' ? 'on' : '';
-  window.removeEventListener('hashchange', readHash); window.removeEventListener('resize', updAge);
-  if (p === 'name') { const u = location.href.split('#')[0]; $('#addr-url').textContent = u.length > 30 ? '…' + u.slice(-29) : u; readHash(); window.addEventListener('hashchange', readHash); }
-  else { updAge(); window.addEventListener('resize', updAge); }
+// Browser zoom = devicePixelRatio ÷ OS scaling. Estimate the zoom at load from the
+// window/viewport ratio (snapped to Chrome's zoom steps) so a reload while zoomed still works.
+const ZOOMS = [25, 33, 50, 67, 75, 80, 90, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500];
+const snapZoom = v => ZOOMS.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a);
+const estZoom = () => (window.outerWidth && window.innerWidth) ? snapZoom((window.outerWidth - 16) / window.innerWidth * 100) : 100;
+const baseDPR = (window.devicePixelRatio || 1) / (estZoom() / 100);
+const zoomPct = () => Math.round((window.devicePixelRatio || 1) / baseDPR * 100);
+const vol = { t: 0, phase: 0, hold: 0 };
+const volPos = v => (Math.min(200, Math.max(25, v)) - 25) / 175 * 100;
+function volTick() {
+  const v = zoomPct();
+  $('#vol-out').textContent = v; $('#vol-fill').style.width = volPos(v) + '%';
+  const target = vol.phase === 0 ? 67 : 100;
+  $('#vol-tgt').style.left = volPos(target) + '%';
+  if (v === target) vol.hold += 120; else vol.hold = 0;
+  if (vol.phase === 0) {
+    $('#vol-note').textContent = v === 67 ? 'Hold it there…' : v < 67 ? 'Too quiet.' : 'Too loud.';
+    if (vol.hold >= 600) { vol.phase = 1; vol.hold = 0; $('#vol-text').innerHTML = '67. Gorgeous. Now set it back to <b>100</b>, so you can actually read the rest of the site.'; }
+  } else {
+    $('#vol-note').textContent = v === 100 ? 'Saving…' : 'Back to 100, please.';
+    if (vol.hold >= 600) { clearInterval(vol.t); run.vol = 67; save(); toast('Alert volume saved: 67. (Displayed as 100 for your comfort.)'); closeSignin(); go('shows'); }
+  }
 }
-function openSignin() { $('#m-signin').classList.add('on'); siPane(run.name ? 'age' : 'name'); }
-function closeSignin() { $('#m-signin').classList.remove('on'); window.removeEventListener('hashchange', readHash); window.removeEventListener('resize', updAge); }
+function siPane(p) {
+  ['name', 'age', 'vol'].forEach((k, i) => { $('#si-' + k).classList.toggle('on', p === k); $$('#si-steps span')[i].className = p === k ? 'on' : (['name', 'age', 'vol'].indexOf(p) > i ? 'done' : ''); });
+  window.removeEventListener('hashchange', readHash); window.removeEventListener('resize', updAge); clearInterval(vol.t);
+  if (p === 'name') { const u = location.href.split('#')[0]; $('#addr-url').textContent = u.length > 30 ? '…' + u.slice(-29) : u; readHash(); window.addEventListener('hashchange', readHash); }
+  else if (p === 'age') { updAge(); window.addEventListener('resize', updAge); }
+  else { vol.phase = 0; vol.hold = 0; $('#vol-text').innerHTML = 'Set your alert volume to exactly <b>67</b>. Our volume control is your <b>browser zoom</b>.'; vol.t = setInterval(volTick, 120); volTick(); }
+}
+function openSignin() { $('#m-signin').classList.add('on'); siPane(!run.name ? 'name' : !run.age ? 'age' : 'vol'); }
+function closeSignin() { $('#m-signin').classList.remove('on'); window.removeEventListener('hashchange', readHash); window.removeEventListener('resize', updAge); clearInterval(vol.t); }
 $('#si-next').onclick = () => { run.name = heard; save(); toast(`Signed in as ${heard}. No password needed. What could go wrong?`); siPane('age'); };
-$('#age-ok').onclick = () => { updAge(); if ($('#age-ok').disabled) return; run.age = Math.round(window.innerWidth / 40); save(); closeSignin(); go('shows'); };
+$('#age-ok').onclick = () => { updAge(); if ($('#age-ok').disabled) return; run.age = Math.round(window.innerWidth / 40); save(); siPane('vol'); };
 $('#si-x').onclick = closeSignin;
 $('.signin').onclick = () => toast('There is no sign-in button. Click Book tickets and you\'ll see.');
 $('#logo').onclick = e => { e.preventDefault(); go('home'); };
@@ -807,9 +839,9 @@ const BOTS = BOT_BOXES;
 $('#botgrid').innerHTML = '<input type="checkbox" aria-label="box">'.repeat(BOTS);
 const boxes = $$('#botgrid input');
 const bot = { t: 0, first: null, failed: false, done: false };
-const HINTS = ['',
-  'Robots don\'t click boxes. Robots press <b>F12</b>. (Yes, like the seat.)',
-  'Press <b>F12</b>, open the <b>Console</b>, and make the boxes tick themselves. They live in <code>#botgrid</code>.',
+const H1 = 'Robots don\'t click boxes. Robots press <b>F12</b>. (Yes, like the seat.)';
+const H2 = 'Press <b>F12</b>, open the <b>Console</b>, and make the boxes tick themselves. They live in <code>#botgrid</code>.';
+const HINTS = ['', '', H1, H1, H2, H2,
   'Fine. Press Reset, then paste this in the Console: <code>$$(\'#botgrid input\').forEach(b =&gt; b.click())</code>'];
 function showHint() { const h = HINTS[Math.min(HINTS.length - 1, run.botFails || 0)]; $('#bot-hint').innerHTML = h; $('#bot-hint').classList.toggle('on', !!h); }
 function botReset() { boxes.forEach(b => b.checked = false); bot.first = null; bot.failed = false; $('#bot-reset').style.display = 'none'; $('#bot-drain').style.width = '0'; $('#bot-verdict').textContent = 'Waiting for a machine…'; }
@@ -892,7 +924,7 @@ function termsStart() {
   document.body.classList.add('nocur');
   document.addEventListener('mousemove', curMove); document.addEventListener('mouseout', curOut);
   cz.raf = requestAnimationFrame(curLoop);
-  cz.auto = setInterval(() => { shuffleCursors(); toast('Cursors reshuffled for your security.'); }, 15000);
+  cz.auto = setInterval(() => { shuffleCursors(); toast('Cursors reshuffled for your security.'); }, 8000);
 }
 function cursorsOff() {
   if (!cz.on) return; cz.on = false;
@@ -976,7 +1008,7 @@ if (run && run.seed != null) {
   if (run.done) { buildSeats(run.seed); go('done'); }
   else if (run.view === 'seats') { go('seats'); if (run.inCk) openCheckout(); toast('Welcome back. Reloading doesn\'t stop the clock.'); }
   else if (run.view === 'shows') go('shows');
-  else { go('home'); if (!run.name || !run.age) openSignin(); }
+  else { go('home'); if (!run.name || !run.age || !run.vol) openSignin(); }
 } else run = null;
 })();
 </script>
