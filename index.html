@@ -116,17 +116,16 @@ a{color:inherit;text-decoration:none}
 .stimes .time.on small{color:#e6ffe9}
 .usher{display:flex;align-items:center;gap:12px;justify-content:center;margin:18px auto 0;background:#fff;border:1px dashed #cfcfd4;border-radius:8px;padding:10px 16px;width:max-content;max-width:94%;font-size:13px;color:#444}
 .usher b{color:var(--ink)}
-#mapwrap{position:relative;padding:8px 0 150px;cursor:crosshair;user-select:none}
+#mapwrap{position:relative;padding:18px 0 150px;user-select:none}
 #map{display:flex;flex-direction:column;align-items:center}
 .cat{width:min(760px,96%);border-bottom:1px solid var(--line);margin:22px 0 14px;padding-bottom:6px;font-size:12.5px;color:var(--sub)}
 .srow{display:flex;align-items:center;gap:6px;margin:4px 0}
 .rl{width:30px;text-align:left;color:var(--mute);font-size:12.5px;font-weight:600}
 .gap{width:22px}
-.seat{width:26px;height:26px;border:1px solid var(--green);border-radius:4px;background:#fff;color:var(--green);font:500 10.5px/24px var(--body);text-align:center;padding:0;cursor:inherit;transition:background .15s,color .15s,transform .15s}
-.seat.sold{background:#E8E8EA;border-color:#E8E8EA;color:transparent}
+.seat{width:26px;height:26px;border:1px solid var(--green);border-radius:4px;background:#fff;color:var(--green);font:500 10.5px/24px var(--body);text-align:center;padding:0;cursor:pointer;transition:background .15s,color .15s,transform .15s}
+.seat.sold{background:#E8E8EA;border-color:#E8E8EA;color:transparent;cursor:not-allowed}
 .seat.held{border-color:var(--amber);color:var(--amber);background:repeating-linear-gradient(45deg,#FFF3DC 0 4px,#fff 4px 8px)}
 .seat.sel{background:var(--green);color:#fff}
-.seat.dogon{outline:2px solid var(--brand);outline-offset:2px}
 .seat.pop{animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
 @keyframes pop{from{transform:scale(1.35)}to{transform:scale(1)}}
 .screen{margin:34px auto 0;width:min(520px,80%);text-align:center;font-size:12px;color:var(--sub)}
@@ -143,16 +142,6 @@ a{color:inherit;text-decoration:none}
 #pay-fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--brand-dk)}
 #pay-label{position:relative}
 
-#dog{position:fixed;left:0;top:0;width:64px;height:44px;pointer-events:none;z-index:50;display:none}
-#dog svg{width:100%;height:100%}
-#dog .tag{position:absolute;left:50%;top:-24px;transform:translateX(-50%);background:var(--ink);color:#fff;font:700 11px var(--mono);padding:2px 6px;border-radius:3px;white-space:nowrap;opacity:0;transition:opacity .2s}
-#dog .tag.on{opacity:1}
-#dog .woof{position:absolute;left:46px;top:-30px;font:400 30px/1 var(--script);color:var(--brand);opacity:0;white-space:nowrap}
-#dog .woof.on{animation:woof .7s ease-out}
-@keyframes woof{0%{opacity:0;transform:translateY(6px)}20%{opacity:1}100%{opacity:0;transform:translateY(-14px)}}
-#leash{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:49;display:none}
-#leash path{fill:none;stroke:var(--brand);stroke-width:2.2;stroke-linecap:round}
-#popcorn{position:fixed;left:0;top:0;width:34px;height:40px;pointer-events:none;z-index:48;display:none}
 .floaty{position:fixed;z-index:51;pointer-events:none;font:700 11px var(--body);color:var(--sub);transform:translate(-50%,-50%);animation:rise 1s ease-out forwards;white-space:nowrap}
 @keyframes rise{from{opacity:0;transform:translate(-50%,-20%)}25%{opacity:1}to{opacity:0;transform:translate(-50%,-180%)}}
 
@@ -319,6 +308,35 @@ body.nocur, body.nocur *{cursor:none !important}
 .spinr{width:42px;height:42px;border:4px solid #eee;border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}
 .tc{background:var(--green);color:#fff;font:700 13px var(--body);letter-spacing:.06em;text-align:center;padding:12px;border-radius:10px;margin-bottom:18px}
 
+/* ---------- drawer + help page ---------- */
+.drawer{position:fixed;inset:0;z-index:95;display:none;background:rgba(0,0,0,.45)}
+.drawer.on{display:block}
+.dpanel{position:absolute;right:0;top:0;bottom:0;width:min(360px,92vw);background:#fff;box-shadow:-10px 0 30px rgba(0,0,0,.2);display:flex;flex-direction:column;overflow:auto;animation:slidein .25s cubic-bezier(.2,.8,.2,1)}
+@keyframes slidein{from{transform:translateX(30px);opacity:0}to{transform:none;opacity:1}}
+.dhead{padding:22px 20px;border-bottom:1px solid var(--line)}
+.dhead b{font-size:22px;display:block}.dhead small{color:var(--sub)}
+.ditem{display:flex;gap:14px;align-items:center;padding:15px 20px;border:0;border-bottom:1px solid var(--line);background:#fff;text-align:left;font-size:14px;font-weight:600}
+.ditem:hover{background:#fafafa}
+.ditem i{font-style:normal;width:22px;text-align:center}
+.ditem small{display:block;color:var(--sub);font-size:12px;font-weight:400}
+#help{position:fixed;inset:0;z-index:96;background:var(--bg);overflow:auto;display:none}
+#help.on{display:block}
+.hhead{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0}
+.hhead .wrap{display:flex;align-items:center;gap:12px;height:64px}
+.hhead h2{margin:0;font:700 18px var(--body)}
+.hbody{max-width:820px;margin:24px auto 60px;padding:0 24px}
+.hcard{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 22px;margin-bottom:16px}
+.hcard h3{margin:0 0 10px;font:700 16px var(--body)}
+.hcard p{margin:0 0 10px;color:#444;font-size:14px}
+.kbd{display:inline-block;border:1px solid #ccc;border-bottom-width:3px;border-radius:5px;padding:1px 7px;font:700 12px var(--mono);background:#fafafa}
+.sc{display:flex;gap:16px;padding:10px 0;border-top:1px solid var(--line);font-size:14px;color:#444}
+.sc:first-of-type{border-top:0}
+.sc .k{width:120px;flex:none}
+.skipbtn{display:block;width:100%;margin-top:14px;background:var(--ink);color:#fff;border:0;border-radius:8px;padding:12px;font-weight:700;font-size:14px}
+.skipbtn:hover{background:#000}
+.guest{background:#F4FBF6;border:1px solid #CDEBD5;border-radius:10px;padding:16px 18px}
+.guest b.u{display:block;font:400 34px/1.1 var(--display);letter-spacing:.02em;margin:6px 0}
+
 #toast{position:fixed;left:50%;top:84px;transform:translate(-50%,-14px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:8px;font:600 13.5px/1.35 var(--body);z-index:90;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;max-width:min(560px,92vw);box-shadow:0 10px 30px rgba(0,0,0,.25)}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 .foot{background:#333338;color:#aaa;font-size:12px;text-align:center;padding:26px 0}
@@ -336,7 +354,7 @@ body.nocur, body.nocur *{cursor:none !important}
       <span class="sess" id="sess" title="Time spent on this booking"><i></i><span id="sess-t">00:00</span></span>
       <button class="city">Mumbai <svg width="10" height="10" viewBox="0 0 10 10"><path d="M1 3l4 4 4-4" stroke="#333" fill="none" stroke-width="1.6"/></svg></button>
       <button class="signin">Sign in</button>
-      <button class="burger" aria-label="Menu">☰</button>
+      <button class="burger" id="burger" aria-label="Menu">☰</button>
     </div>
   </div>
 </header>
@@ -362,7 +380,7 @@ body.nocur, body.nocur *{cursor:none !important}
       </div>
     </div>
   </section>
-  <section class="sec"><div class="wrap"><h2>About the movie</h2><p>A perfectly normal cinema-goer tries to book one perfectly normal seat. Standing in the way: an over-eager usher dog, a ticket counter that assumes you have friends, other customers with suspiciously fast fingers, and a one-time password that only lives in your browser tab. Based on a true booking.</p></div></section>
+  <section class="sec"><div class="wrap"><h2>About the movie</h2><p>A perfectly normal cinema-goer tries to book one perfectly normal seat. Standing in the way: a ticket counter that assumes you have friends, a password policy with opinions, other customers with suspiciously fast fingers, and a one-time password that only lives in your browser tab. Based on a true booking.</p></div></section>
   <section class="sec"><div class="wrap"><h2>Cast</h2>
     <div class="cast">
       <div><div class="av" style="background:#1A1A1A">🐕</div><b>Biscuit</b><small>as The Usher</small></div>
@@ -392,9 +410,9 @@ body.nocur, body.nocur *{cursor:none !important}
     <div><h2>Chaos by Design</h2><small id="show-line">—</small></div>
     <span class="sess on" id="sess2"><i></i><span id="sess2-t">00:00</span></span>
     <button class="tcount" id="tcount">4 Tickets ✎</button>
+    <button class="burger" id="burger2" aria-label="Menu">☰</button>
   </div></div>
   <div class="stimes"><div class="wrap" id="stimes"></div></div>
-  <div class="usher">🐕 <span><b>Biscuit</b> is your usher today. He does the clicking. Hold the leash, click anywhere on the map, and he presses whatever seat he's standing on.</span></div>
   <div id="mapwrap">
     <div id="map"></div>
     <div class="screen"><div class="bar"></div>All eyes this way please!</div>
@@ -478,6 +496,12 @@ body.nocur, body.nocur *{cursor:none !important}
           <input class="inp" id="rg-pass2" type="password" autocomplete="new-password">
           <button class="go2 full" id="rg-go">Create Account &amp; Book Seat F12</button>
         </div>
+        <div id="lg-guest" style="display:none">
+          <h3>Continuing as a guest</h3>
+          <div class="guest"><small>Your username is</small><b class="u" id="guest-u">—</b><small>Note it down. It's shown only once, and you'll need it for identity verification in the next step.</small></div>
+          <button class="go2 full" id="guest-go">Continue</button>
+        </div>
+        <button class="skipbtn" id="lg-skip" style="display:none">Skip sign-in (express checkout) →</button>
       </div>
 
       <div class="pane" id="ck-name">
@@ -509,6 +533,7 @@ body.nocur, body.nocur *{cursor:none !important}
           <div class="taps" id="taps"></div>
           <div class="otp-msg" id="otp-msg">Click inside this box first so it can hear your Caps Lock.</div>
         </div>
+        <button class="skipbtn" id="ph-skip" style="display:none">Skip mobile verification (express checkout) →</button>
       </div>
 
       <div class="pane" id="ck-bot">
@@ -563,9 +588,49 @@ body.nocur, body.nocur *{cursor:none !important}
   </div>
 </div>
 
-<div id="dog"><span class="tag" id="dogtag"></span><svg viewBox="0 0 76 52"><g fill="#1A1A1A"><rect x="14" y="20" width="36" height="16" rx="8"/><circle cx="54" cy="16" r="10"/><rect x="58" y="15" width="13" height="8" rx="4"/><path d="M47 9 L50 0 L56 8 Z"/><rect x="17" y="32" width="5" height="16" rx="2"/><rect x="25" y="32" width="5" height="14" rx="2"/><rect x="39" y="32" width="5" height="16" rx="2"/><rect x="46" y="32" width="5" height="14" rx="2"/><path d="M16 24 Q6 20 4 8" stroke="#1A1A1A" stroke-width="4" fill="none" stroke-linecap="round"/></g><rect x="46" y="22" width="12" height="4" rx="2" fill="#F23D0C"/><circle cx="57" cy="13" r="1.8" fill="#fff"/><circle cx="70" cy="18" r="2" fill="#fff"/></svg><span class="woof" id="woof">woof</span></div>
-<svg id="leash"><path id="leash-path" d=""/></svg>
-<svg id="popcorn" viewBox="0 0 34 40"><circle cx="9" cy="10" r="6" fill="#FFF3C4"/><circle cx="17" cy="7" r="7" fill="#FFF8DA"/><circle cx="25" cy="10" r="6" fill="#FFF3C4"/><path d="M4 14 H30 L26 39 H8 Z" fill="#F23D0C"/><path d="M11 14 L12.5 39 M17 14 V39 M23 14 L21.5 39" stroke="#fff" stroke-width="2.4"/></svg>
+<div class="drawer" id="drawer">
+  <div class="dpanel">
+    <div class="dhead"><button class="x" id="drawer-x" aria-label="Close">×</button><b>Hey!</b><small>Welcome to SeatSnatch</small></div>
+    <button class="ditem" data-soon><i>🔔</i><span>Notifications<small>View all your notifications</small></span></button>
+    <button class="ditem" data-soon><i>🎟</i><span>Your Orders<small>View all your bookings &amp; purchases</small></span></button>
+    <button class="ditem" data-soon><i>▶</i><span>Stream Library<small>Rented &amp; purchased movies</small></span></button>
+    <button class="ditem" data-soon><i>💳</i><span>Play Credit Card<small>View your card details and offers</small></span></button>
+    <button class="ditem" id="open-help"><i>❔</i><span>Help &amp; Support<small>FAQs, booking help and keyboard shortcuts</small></span></button>
+    <button class="ditem" data-soon><i>⚙</i><span>Accounts &amp; Settings<small>Location, payments, permissions &amp; more</small></span></button>
+    <button class="ditem" data-soon><i>🎁</i><span>Rewards<small>View your rewards &amp; unlock new ones</small></span></button>
+  </div>
+</div>
+
+<div id="help">
+  <div class="hhead"><div class="wrap"><button class="back" id="help-x" aria-label="Back">‹</button><h2>Help &amp; Support</h2></div></div>
+  <div class="hbody">
+    <div class="hcard">
+      <h3>Booking tickets</h3>
+      <p><b>How do I pick my seats?</b> Choose a show, then click an available (green-outlined) seat on the seat map. Grey seats are sold; striped seats are being held by another customer and usually free up within a few seconds.</p>
+      <p><b>Why were extra seats selected?</b> We select seats for the number of tickets on your booking. You can change the number of tickets with the ticket button at the top of the seat map.</p>
+      <p><b>Why do I have to hold the Book button?</b> Holding confirms you meant to book. It prevents accidental bookings on touchpads.</p>
+    </div>
+    <div class="hcard">
+      <h3>Account, identity &amp; verification</h3>
+      <p>Every booking is linked to an account. If you don't have one yet, you'll be offered the option to create one after your first sign-in attempt. Passwords must meet our security policy, which is shown one requirement at a time during registration.</p>
+      <p>For your protection we also verify your identity, age and mobile number, and run a short human check before your booking is confirmed.</p>
+    </div>
+    <div class="hcard">
+      <h3>Keyboard shortcuts</h3>
+      <div class="sc"><span class="k"><span class="kbd">Ctrl</span> + <span class="kbd">P</span></span><span><b>Express checkout.</b> During <b>Sign in</b> or <b>Mobile verification</b>, press Ctrl + P to reveal a <b>Skip</b> button. Skipping sign-in continues as a guest with a randomly assigned username, which is shown to you once: note it down, because you'll need it for identity verification. Skipping mobile verification skips the phone number and OTP. (On a Mac, use ⌘ + P.)</span></div>
+      <div class="sc"><span class="k"><span class="kbd">Enter</span></span><span>Submits the form you're typing in.</span></div>
+    </div>
+    <div class="hcard">
+      <h3>Cancellations &amp; refunds</h3>
+      <p>Bookings can be cancelled up to 20 minutes before the show from <i>Your Orders</i>. Refunds are processed to the original payment method within 5–7 working days. Convenience fees are non-refundable.</p>
+    </div>
+    <div class="hcard">
+      <h3>Still need help?</h3>
+      <p>Visit the box office at Chaos Cinemas: M314, VIT Wadala. Biscuit will be happy to see you.</p>
+    </div>
+  </div>
+</div>
+
 <div id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -578,7 +643,6 @@ const fmt = ms => { ms = Math.max(0, ms); return `${pad2(Math.floor(ms / 60000))
 const pick = a => a[Math.floor(Math.random() * a.length)];
 const TARGET = 'F12';
 // ---- Tuning knobs: change these if our proof run gets too close to 60s ----
-const DOG_SPEED = .05;        // how fast Biscuit follows the cursor (higher = faster)
 const F12_HOLD_MS = 2500;     // someone else "holds" F12 the first time the dog gets close
 const PAY_HOLD_MS = 1500;     // how long to hold the Pay button
 const OTP_COMMIT_MS = 1000;   // pause after the last Caps Lock tap before a digit locks in
@@ -755,65 +819,29 @@ function updateBar() {
   $('#pay-label').textContent = ok ? `Hold to pay ₹${total}` : `Select ${left} more seat${left > 1 ? 's' : ''}`;
 }
 
-/* the usher dog: he follows your cursor (slowly) and clicks whatever he's standing on */
-const dog = { x: 0, y: 0, mx: 0, my: 0, face: 1, raf: 0, pc: null, pcT: 0, on: null, live: 0 };
-function dogSeat() { const el = document.elementFromPoint(dog.x, dog.y); return el && el.classList && el.classList.contains('seat') ? byEl.get(el) : null; }
-let dogLast = 0;
-function dogLoop(t) {
-  const dt = dogLast ? Math.min(.1, (t - dogLast) / 1000) : 1 / 60; dogLast = t;
-  const tx = dog.pc ? dog.pc.x : dog.mx, ty = dog.pc ? dog.pc.y : dog.my + 26;
-  const k = 1 - Math.pow(1 - (dog.pc ? .12 : DOG_SPEED), dt * 60);   // same speed at any frame rate
-  const vx = (tx - dog.x) * k;
-  dog.x += vx; dog.y += (ty - dog.y) * k;
-  if (Math.abs(vx) > .35) dog.face = vx > 0 ? 1 : -1;
-  $('#dog').style.transform = `translate(${dog.x - 32}px, ${dog.y - 22}px)`;
-  $('#dog svg').style.transform = `scaleX(${dog.face})`;
-  const cx = dog.x - 4 * dog.face, cy = dog.y - 4;
-  $('#leash-path').setAttribute('d', `M${dog.mx} ${dog.my} Q ${(dog.mx + cx) / 2} ${Math.max(dog.my, cy) + 50} ${cx} ${cy}`);
-  const s = dogSeat();
-  if (s !== dog.on) {
-    if (dog.on) dog.on.el.classList.remove('dogon');
-    dog.on = s;
-    if (s) s.el.classList.add('dogon');
-    $('#dogtag').textContent = s ? s.id : '';
-    $('#dogtag').classList.toggle('on', !!s);
-  }
-  // someone else always eyes up F12 the first time the usher gets close
+/* seat map: other customers grab seats near your cursor, and someone always eyes up F12 once */
+const mouse = { x: -999, y: -999 };
+let liveIv = 0;
+function onMove(e) {
+  mouse.x = e.clientX; mouse.y = e.clientY;
   if (run && !run.f12Held && target && !target.sold) {
     const r = target.el.getBoundingClientRect();
-    if (Math.hypot(r.left + r.width / 2 - dog.x, r.top + r.height / 2 - dog.y) < 70) { run.f12Held = true; save(); holdSeat(target, F12_HOLD_MS); toast('Someone else is looking at F12…'); }
+    if (Math.hypot(r.left + r.width / 2 - mouse.x, r.top + r.height / 2 - mouse.y) < 60) { run.f12Held = true; save(); holdSeat(target, F12_HOLD_MS); toast('Someone else is looking at F12…'); }
   }
-  dog.raf = requestAnimationFrame(dogLoop);
 }
-function popcornLater() {
-  dog.pcT = setTimeout(() => {
-    const r = pick(seats.filter(s => !s.sold)).el.getBoundingClientRect();
-    dog.pc = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-    const p = $('#popcorn'); p.style.display = 'block'; p.style.transform = `translate(${dog.pc.x - 17}px, ${dog.pc.y - 34}px)`;
-    dog.pcT = setTimeout(() => { dog.pc = null; p.style.display = 'none'; popcornLater(); }, 1800);
-  }, 4500 + Math.random() * 3500);
-}
-function onMove(e) { dog.mx = e.clientX; dog.my = e.clientY; }
-function onMapDown(e) {
-  if (e.button !== 0) return;
-  e.preventDefault();
-  const w = $('#woof'); w.classList.remove('on'); void w.offsetWidth; w.classList.add('on');
-  const s = dogSeat();
-  if (s) pickSeat(s);
-}
+function onMapClick(e) { const el = e.target.closest('.seat'); if (el && byEl.has(el)) pickSeat(byEl.get(el)); }
 function liveTick() {
-  // other customers book or hold seats near the usher
-  const near = seats.filter(s => {
-    if (s.sold || s.held || sel.includes(s) || s === target) return false;
-    const r = s.el.getBoundingClientRect();
-    return Math.hypot(r.left + 13 - dog.x, r.top + 13 - dog.y) < 170;
+  const near = seats.filter(st => {
+    if (st.sold || st.held || sel.includes(st) || st === target) return false;
+    const r = st.el.getBoundingClientRect();
+    return Math.hypot(r.left + 13 - mouse.x, r.top + 13 - mouse.y) < 170;
   });
   if (near.length && Math.random() < .7) {
-    const s = pick(near);
-    if (Math.random() < .55) { setSold(s, true); bump(s.el); floaty(s.el, 'just booked'); }
-    else holdSeat(s, 2600 + Math.random() * 1800);
+    const st = pick(near);
+    if (Math.random() < .55) { setSold(st, true); bump(st.el); floaty(st.el, 'just booked'); }
+    else holdSeat(st, 2600 + Math.random() * 1800);
   }
-  const sold = seats.filter(s => s.sold);
+  const sold = seats.filter(st => st.sold);
   if (sold.length > seats.length * .55) setSold(pick(sold), false);
 }
 hooks.seats = {
@@ -824,20 +852,14 @@ hooks.seats = {
     $('#tcount').textContent = `${run.count} Ticket${run.count > 1 ? 's' : ''} ✎`;
     $('#stimes').innerHTML = c.times.filter(x => x[1] !== 'sold').map(([tt]) => `<span class="time${tt === t ? ' on' : ''}">${tt}<small>DOLBY 7.1</small></span>`).join('');
     updateBar();
-    const r = $('#map').getBoundingClientRect();
-    dog.x = dog.mx = r.left + r.width / 2; dog.y = r.top + 60; dog.my = dog.y - 26;
-    $('#dog').style.display = 'block'; $('#leash').style.display = 'block';
     document.addEventListener('mousemove', onMove);
-    $('#mapwrap').addEventListener('mousedown', onMapDown);
-    dog.raf = requestAnimationFrame(dogLoop);
-    popcornLater();
-    dog.live = setInterval(liveTick, 1000);
+    $('#map').addEventListener('click', onMapClick);
+    liveIv = setInterval(liveTick, 1000);
   },
   exit() {
-    cancelAnimationFrame(dog.raf); clearTimeout(dog.pcT); clearInterval(dog.live); dog.pc = null;
+    clearInterval(liveIv);
     document.removeEventListener('mousemove', onMove);
-    $('#mapwrap').removeEventListener('mousedown', onMapDown);
-    $('#dog').style.display = 'none'; $('#leash').style.display = 'none'; $('#popcorn').style.display = 'none';
+    $('#map').removeEventListener('click', onMapClick);
     $('#paybar').classList.remove('on');
   }
 };
@@ -882,7 +904,7 @@ $('#ck-x').onclick = closeCheckout;
 
 /* 1a. sign in: there are no accounts yet, so it always fails, and only then is Register revealed */
 function loginStart() {
-  $('#lg-box').style.display = ''; $('#rg-box').style.display = 'none';
+  $('#lg-box').style.display = ''; $('#rg-box').style.display = 'none'; $('#lg-guest').style.display = 'none'; $('#lg-skip').style.display = 'none';
   $('#lg-user').value = ''; $('#lg-pass').value = ''; $('#lg-err').textContent = '';
   $('#lg-reg').style.display = run.loginFailed ? '' : 'none';
 }
@@ -960,6 +982,37 @@ function register() {
 }
 $('#rg-go').onclick = register;
 
+/* Express checkout: Ctrl + P (documented under ☰ → Help & Support) reveals Skip on sign-in and mobile */
+const GUEST_WORDS = ['popcorn', 'encore', 'usher', 'reel', 'balcony', 'trailer', 'matinee', 'nacho'];
+document.addEventListener('keydown', e => {
+  if (!((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey && e.key && e.key.toLowerCase() === 'p')) return;
+  if (!run || !$('#m-ck').classList.contains('on')) return;     // outside checkout, Ctrl + P prints as usual
+  e.preventDefault();
+  if (run.ck === 'login') { if ($('#lg-guest').style.display === 'none') $('#lg-skip').style.display = ''; }
+  else if (run.ck === 'phone') $('#ph-skip').style.display = '';
+  else toast('Express checkout: there is nothing to skip on this step.');
+});
+$('#lg-skip').onclick = () => {
+  if (run.ck !== 'login') return;
+  const u = pick(GUEST_WORDS) + (10 + Math.floor(Math.random() * 90));
+  run.user = u; run.guest = true; save();
+  $('#guest-u').textContent = u;
+  $('#lg-box').style.display = 'none'; $('#rg-box').style.display = 'none'; $('#lg-skip').style.display = 'none';
+  $('#lg-guest').style.display = '';
+};
+$('#guest-go').onclick = () => ckGo('name');
+$('#ph-skip').onclick = () => { if (run.ck !== 'phone') return; otpStop(); toast('Mobile verification skipped.'); ckGo('bot'); };
+
+/* hamburger menu and the help page */
+const openDrawer = () => $('#drawer').classList.add('on');
+$('#burger').onclick = openDrawer;
+$('#burger2').onclick = openDrawer;
+$('#drawer-x').onclick = () => $('#drawer').classList.remove('on');
+$('#drawer').addEventListener('click', e => { if (e.target.id === 'drawer') $('#drawer').classList.remove('on'); });
+$$('.ditem[data-soon]').forEach(b => b.onclick = () => toast('Coming soon.'));
+$('#open-help').onclick = () => { $('#drawer').classList.remove('on'); $('#help').classList.add('on'); $('#help').scrollTop = 0; };
+$('#help-x').onclick = () => $('#help').classList.remove('on');
+
 /* 2. identity: type # + your username in the address bar */
 let heard = '', nameT = 0;
 function readHash() {
@@ -991,6 +1044,7 @@ $('#age-ok').onclick = () => { updAge(); if ($('#age-ok').disabled) return; run.
 
 /* 4. mobile + OTP */
 function phoneStart() {
+  $('#ph-skip').style.display = 'none';
   $('#ph-in').value = run.phone || ''; $('#ph-err').textContent = '';
   $('#ph-otp').style.display = 'none'; $('#ph-send').textContent = 'Send OTP';
 }

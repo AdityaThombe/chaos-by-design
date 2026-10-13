@@ -28,9 +28,9 @@ Movie page → Showtimes → **Seat map** → **Hold to book** → Checkout: **A
 | Step | The catch |
 |---|---|
 | Ticket count | Always starts at **4**, with no popup asking. Picking a seat grabs up to 4 in a row and Book stays locked. The only way to change it is the small **"4 Tickets ✎"** button on the seat map. |
-| Seat map | **Biscuit the usher dog does the clicking.** He follows your cursor slowly and clicks what he's standing on. Popcorn distracts him. |
-| Seat map | Other customers book or hold seats near the dog in real time. F12 always gets held once when the dog gets close. The layout and numbering are randomised every attempt. |
+| Seat map | Other customers book or hold seats **near your cursor** in real time. F12 always gets held once when your cursor gets close. The layout and numbering are randomised every attempt. |
 | Book | You have to **hold** the button. Letting go resets it. |
+| Express checkout | Pressing **Ctrl + P** during **Sign in** or **Mobile verification** blocks the print dialog and reveals a **Skip** button. Skipping sign-in assigns a random guest username (shown once; you need it for the identity step). Skipping mobile skips the number and OTP. This is documented only on the **☰ menu → Help & Support** page. |
 | Account: sign in | Asks you to log in, with no Register button anywhere. No accounts exist, so it always fails: *"Invalid credentials! No active reservation profile found."* Only then does **Register** appear. |
 | Account: register | 8 password rules, shown **one at a time** (Requirement *n* of 8, Prev/Next). The rules **hide while you're typing in any field**. A failed submit **wipes all four fields** and jumps to the first failed rule. |
 | Identity | Type `#` + **your username** at the end of the URL in the address bar. |
@@ -51,20 +51,21 @@ Movie page → Showtimes → **Seat map** → **Hold to book** → Checkout: **A
 
 A password that passes all 8: **`@1n2s3h4MVKNR#`**
 
-Everything is solvable: no dead ends, no invisible hitboxes, no fake success screens, no flashing and no sound. The tuning knobs (dog speed, hold times and so on) are at the top of the script.
+Everything is solvable: no dead ends, no invisible hitboxes, no fake success screens, no flashing and no sound. The tuning knobs (hold times and so on) are at the top of the script.
 
-## The proof run (target: under 50 seconds)
+## The proof run (target: under 35 seconds)
 
 1. **Book tickets** → any **showtime**.
 2. Seat map: **4 Tickets ✎** (top right) → **1** → **Select Seats**.
-3. Keep your cursor just **above** F12. Click when the dog's tag says **F12**. If F12 is striped, wait about 2.5 seconds and click again.
+3. Click **F12**. If it's striped (on hold), wait about 2.5 seconds and click again.
 4. **Hold Book** until the bar fills.
-5. **Sign In** with the fields empty → **Register / Create New Account**.
-6. Username `abc` · Email `a@b.co` · Password and Confirm `@1n2s3h4MVKNR#` → **Create Account**.
-7. Address bar → `End` → type `#abc` → `Enter`. It moves on by itself.
-8. **Win + ←** (snap to half the screen) → **Verify age**.
-9. Mobile `9876543210` → **Send OTP** → read the 2 digits in the tab title → tap Caps Lock that many times for each, pausing between digits.
-10. Tick **I'm not a robot** → click the 4 circles at **r1c7, r4c10, r7c15, r10c2** → **Verify**.
+5. Press **Ctrl + P** → **Skip sign-in** → read the guest username (for example `popcorn42`) → **Continue**.
+6. Address bar → `End` → type `#` + that username → `Enter`. It moves on by itself.
+7. **Win + ←** (snap to half the screen) → **Verify age**.
+8. Press **Ctrl + P** → **Skip mobile verification**.
+9. Tick **I'm not a robot** → click the 4 circles at **r1c7, r4c10, r7c15, r10c2** → **Verify**.
+
+(The long way, without the shortcut, is still there: fail sign-in → Register with `@1n2s3h4MVKNR#` → mobile `9876543210` → Caps Lock OTP.)
 
 **Before the judge or the neighbouring team plays:** maximise the window again and open `localhost:5517/?reset`.
 
