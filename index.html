@@ -217,6 +217,51 @@ a{color:inherit;text-decoration:none}
 .took .again{margin-left:auto;border:1px solid var(--brand);background:#fff;color:var(--brand);border-radius:8px;padding:11px 20px;font-weight:700}
 .took .again:hover{background:var(--brand);color:#fff}
 
+/* ---------- sign-in / checkout ---------- */
+.ck{width:min(620px,100%)}
+.ck .mb{text-align:left;max-height:88vh;overflow:auto}
+.steps{display:flex;gap:6px;margin:0 0 18px;font:700 10.5px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.steps span{flex:1;border-top:3px solid var(--line);padding-top:7px}
+.steps span.on{border-color:var(--brand);color:var(--ink)}
+.steps span.done{border-color:var(--green);color:var(--green)}
+.pane{display:none}.pane.on{display:block}
+.go2{border:0;border-radius:8px;background:var(--brand);color:#fff;font:700 15px var(--body);padding:13px 24px}
+.go2:hover:not(:disabled){background:var(--brand-dk)}
+.go2:disabled{background:#ccc;cursor:not-allowed}
+.go2.ghost{background:#fff;color:var(--ink);box-shadow:inset 0 0 0 1.5px #bbb}
+.go2.ghost:hover{background:#f6f6f6}
+.btnrow{display:flex;gap:12px;align-items:center;margin-top:14px;flex-wrap:wrap}
+.linkish{background:none;border:0;color:var(--brand);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:0}
+.addr{display:flex;align-items:center;gap:10px;background:#1A1A1A;border-radius:999px;padding:11px 18px;font:12.5px var(--mono);color:#aaa;overflow:hidden;white-space:nowrap}
+.addr .dots{display:flex;gap:5px;flex:none}.addr .dots i{width:8px;height:8px;border-radius:50%;background:#444}
+.addr .url{overflow:hidden;min-width:0}
+.addr .hashpart{color:var(--brand);flex:none}
+.addr .caret{width:2px;height:15px;background:var(--brand);animation:blink 1s steps(1) infinite;flex:none}
+.uparrow{font:400 34px/1 var(--script);color:var(--brand);margin:2px 0 0 26px;transform:rotate(-5deg)}
+.heard{margin:10px 0 16px}.heard small{display:block;color:var(--sub)}.heard b{font:400 40px/1.1 var(--display);text-transform:uppercase}
+.agebig{font:400 120px/1 var(--display);color:var(--brand)}
+.botgrid{display:grid;grid-template-columns:repeat(25,1fr);gap:3px;margin:4px 0 10px}
+.botgrid input{-webkit-appearance:none;appearance:none;margin:0;width:100%;aspect-ratio:1;border:1.5px solid #c4c4c8;border-radius:3px;cursor:pointer;background:#fff}
+.botgrid input:checked{background:var(--green);border-color:var(--green)}
+.drain{height:4px;background:#eee;border-radius:2px;overflow:hidden}.drain i{display:block;height:100%;width:0;background:var(--brand)}
+.botrow{display:flex;justify-content:space-between;font-size:13px;margin:10px 0;color:var(--sub)}
+#bot-verdict{font-weight:700;color:var(--ink)}
+.hint{display:none;background:#FFF6E5;border-left:3px solid var(--amber);padding:8px 12px;font-size:13px;margin-bottom:10px;border-radius:0 6px 6px 0}.hint.on{display:block}
+code{font-family:var(--mono);font-size:11.5px;background:#f1f1f3;padding:1px 5px;border-radius:3px}
+.summary s{color:var(--mute);text-decoration-color:var(--brand);text-decoration-thickness:2px;margin-right:6px}
+.err{color:#D0021B;font-weight:600;font-size:13px;min-height:18px;margin:6px 0 0}
+.dispute{display:none;margin-top:12px;border-left:3px solid var(--brand);padding-left:12px}.dispute.on{display:block}
+.dispute small{display:block;color:var(--sub);margin-bottom:4px}
+.field{width:100%;border:0;border-bottom:2px solid var(--ink);font:400 26px var(--display);padding:6px 0;outline:none;text-transform:uppercase;background:none}
+.tos{max-height:150px;overflow:auto;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:13px;margin-bottom:14px;background:#FAFAFA}
+.tos p{margin:0 0 8px}
+.check{display:inline-flex;gap:10px;align-items:center;font-weight:700;user-select:none}
+.check .box{width:22px;height:22px;border:2px solid var(--ink);border-radius:4px;display:grid;place-items:center;color:#fff;font-size:14px}
+.check.on .box{background:var(--green);border-color:var(--green)}
+body.nocur, body.nocur *{cursor:none !important}
+#cursors{position:fixed;inset:0;pointer-events:none;z-index:200;display:none}
+#cursors svg{position:absolute;left:0;top:0;width:20px;height:31px;will-change:transform}
+
 #toast{position:fixed;left:50%;top:84px;transform:translate(-50%,-14px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:8px;font:600 13.5px/1.35 var(--body);z-index:90;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;max-width:min(560px,92vw);box-shadow:0 10px 30px rgba(0,0,0,.25)}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 .foot{background:#333338;color:#aaa;font-size:12px;text-align:center;padding:26px 0}
@@ -338,20 +383,82 @@ a{color:inherit;text-decoration:none}
   </div>
 </div>
 
-<div class="modal" id="m-otp">
-  <div class="mcard otp-card">
+<div class="modal" id="m-signin">
+  <div class="mcard ck">
     <div class="mb">
-      <button class="x" id="otp-x" aria-label="Close">×</button>
-      <h3>Confirm your booking</h3>
-      <div class="summary" id="summary"></div>
-      <p class="otp-note"><b>Enter the OTP to confirm.</b> We've sent it to your <b>browser tab</b> ↑. Our keypad is under maintenance, so tap <span class="kc">CAPS LOCK</span> once per number, then wait. Each digit locks in by itself.</p>
-      <div class="slots" id="slots"><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
-      <div class="taps" id="taps"></div>
-      <div class="otp-msg" id="otp-msg">Click inside this box first so it can hear your Caps Lock.</div>
+      <button class="x" id="si-x" aria-label="Close">×</button>
+      <div class="steps" id="si-steps"><span class="on">1 · Sign in</span><span>2 · Age check</span></div>
+      <div class="pane on" id="si-name">
+        <h3>Sign in to book</h3>
+        <p class="otp-note">For your security, SeatSnatch has no login form. You sign in through your <b>address bar</b>: click it, go to the very end, type <code>#</code> followed by your name, and press <b>Enter</b>.</p>
+        <div class="addr"><span class="dots"><i></i><i></i><i></i></span><span class="url" id="addr-url"></span><span class="hashpart" id="addr-hash">#</span><span class="caret"></span></div>
+        <div class="uparrow">↑ up there, not here</div>
+        <div class="heard"><small>Signing in as</small><b id="si-heard">—</b></div>
+        <button class="go2" id="si-next" disabled>Continue</button>
+      </div>
+      <div class="pane" id="si-age">
+        <h3>Age verification · UA13+</h3>
+        <p class="otp-note">This film is UA13+, and student pricing is for 30 and under. Our age check reads your age from your <b>browser window's width ÷ 40</b>. Resize the window until it's right.</p>
+        <div class="agebig" id="age-out">00</div>
+        <small id="age-math" style="color:var(--sub);font-family:var(--mono)"></small>
+        <p class="otp-msg" id="age-note" style="margin:10px 0 14px"></p>
+        <button class="go2" id="age-ok" disabled>Verify age</button>
+      </div>
     </div>
   </div>
 </div>
 
+<div class="modal" id="m-ck">
+  <div class="mcard ck">
+    <div class="mb">
+      <button class="x" id="ck-x" aria-label="Close">×</button>
+      <div class="steps" id="ck-steps"><span>1 · Bot check</span><span>2 · Review</span><span>3 · Terms</span><span>4 · OTP</span></div>
+
+      <div class="pane" id="ck-bot">
+        <h3>Anti-scalper check</h3>
+        <p class="otp-note">Scalper bots ruin cinema. To prove you're <b>not</b> a bot, prove you <b>are</b> one: tick all <b>200 boxes</b> within <b>one second</b>.</p>
+        <div class="botgrid" id="botgrid"></div>
+        <div class="drain"><i id="bot-drain"></i></div>
+        <div class="botrow"><span id="bot-verdict">Waiting for a machine…</span><span>Attempts <b id="bot-att">0</b></span></div>
+        <div class="hint" id="bot-hint"></div>
+        <button class="go2 ghost" id="bot-reset" style="display:none">Reset ↺</button>
+      </div>
+
+      <div class="pane" id="ck-review">
+        <h3>Review your booking</h3>
+        <p class="otp-note">Please check your details. They were entered by Biscuit, so they are definitely correct.</p>
+        <div class="summary" id="rv-sum"></div>
+        <p class="err" id="rv-err"></p>
+        <div class="dispute" id="rv-dispute"><small>To correct a record, type the correct seat <b>backwards</b>. It's for fraud prevention. Probably.</small><input class="field" id="rv-in" placeholder="e.g. 7B" autocomplete="off" spellcheck="false"></div>
+        <div class="btnrow"><button class="go2" id="rv-ok">Looks good, continue</button><button class="linkish" id="rv-wrong">Something's wrong?</button></div>
+      </div>
+
+      <div class="pane" id="ck-terms">
+        <h3>Terms &amp; conditions</h3>
+        <div class="tos">
+          <p><b>1.</b> By reading this, you agree that you have read it.</p>
+          <p><b>2.</b> SeatSnatch may contact you by carrier pigeon, fax, or interpretive dance.</p>
+          <p><b>3.</b> Biscuit is not liable for popcorn-related incidents.</p>
+          <p><b>4.</b> Your friends were added for your convenience. Not theirs.</p>
+          <p><b>5.</b> You waive all rights to good UX, now and in perpetuity.</p>
+        </div>
+        <div class="check" id="tos-check"><span class="box"></span>I have read and agree to everything</div>
+        <div class="btnrow"><button class="go2" id="tos-agree">Agree &amp; continue</button><button class="go2 ghost" id="tos-disagree">Disagree</button></div>
+        <p class="otp-msg" id="tos-note" style="margin-top:12px">We've given you ten cursors. Only one of them is real.</p>
+      </div>
+
+      <div class="pane" id="ck-otp">
+        <h3>Enter OTP</h3>
+        <p class="otp-note">We've sent a 2-digit OTP to your <b>browser tab</b> ↑. Our keypad is under maintenance, so tap <span class="kc">CAPS LOCK</span> once per number, then wait. Each digit locks in by itself.</p>
+        <div class="slots" id="slots"><div class="slot"></div><div class="slot"></div></div>
+        <div class="taps" id="taps"></div>
+        <div class="otp-msg" id="otp-msg">Click inside this box first so it can hear your Caps Lock.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="cursors"></div>
 <div id="dog"><span class="tag" id="dogtag"></span><svg viewBox="0 0 76 52"><g fill="#1A1A1A"><rect x="14" y="20" width="36" height="16" rx="8"/><circle cx="54" cy="16" r="10"/><rect x="58" y="15" width="13" height="8" rx="4"/><path d="M47 9 L50 0 L56 8 Z"/><rect x="17" y="32" width="5" height="16" rx="2"/><rect x="25" y="32" width="5" height="14" rx="2"/><rect x="39" y="32" width="5" height="16" rx="2"/><rect x="46" y="32" width="5" height="14" rx="2"/><path d="M16 24 Q6 20 4 8" stroke="#1A1A1A" stroke-width="4" fill="none" stroke-linecap="round"/></g><rect x="46" y="22" width="12" height="4" rx="2" fill="#F23D0C"/><circle cx="57" cy="13" r="1.8" fill="#fff"/><circle cx="70" cy="18" r="2" fill="#fff"/></svg><span class="woof" id="woof">woof</span></div>
 <svg id="leash"><path id="leash-path" d=""/></svg>
 <svg id="popcorn" viewBox="0 0 34 40"><circle cx="9" cy="10" r="6" fill="#FFF3C4"/><circle cx="17" cy="7" r="7" fill="#FFF8DA"/><circle cx="25" cy="10" r="6" fill="#FFF3C4"/><path d="M4 14 H30 L26 39 H8 Z" fill="#F23D0C"/><path d="M11 14 L12.5 39 M17 14 V39 M23 14 L21.5 39" stroke="#fff" stroke-width="2.4"/></svg>
@@ -366,6 +473,12 @@ const pad2 = n => String(n).padStart(2, '0');
 const fmt = ms => { ms = Math.max(0, ms); return `${pad2(Math.floor(ms / 60000))}:${pad2(Math.floor(ms / 1000) % 60)}.${Math.floor(ms / 100) % 10}`; };
 const pick = a => a[Math.floor(Math.random() * a.length)];
 const TARGET = 'F12';
+// ---- Tuning knobs: change these if our proof run gets too close to 60s ----
+const DOG_SPEED = .05;        // how fast Biscuit follows the cursor (higher = faster)
+const F12_HOLD_MS = 2500;     // someone else "holds" F12 the first time the dog gets close
+const PAY_HOLD_MS = 1500;     // how long to hold the Pay button
+const OTP_COMMIT_MS = 1000;   // pause after the last Caps Lock tap before a digit locks in
+const BOT_BOXES = 200;        // anti-scalper boxes to tick within one second
 const RUN_KEY = 'snatch-run-v1', TIMES_KEY = 'snatch-times-v1', ATT_KEY = 'snatch-att-v1';
 const load = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };
 const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
@@ -405,11 +518,44 @@ setInterval(() => {
 $('#book').onclick = () => {
   if (!run || run.done) {
     const attempt = load(ATT_KEY, 0) + 1; store(ATT_KEY, attempt);
-    run = { seed: (Math.random() * 2 ** 31) | 0, t0: Date.now(), attempt, view: 'shows', count: 4, show: null, f12Held: false, otp: null, done: false, ms: 0 };
-    save();
+    run = { seed: (Math.random() * 2 ** 31) | 0, t0: Date.now(), attempt, view: 'home', count: 4, show: null, f12Held: false, otp: null, done: false, ms: 0,
+            name: '', age: 0, ck: 'bot', inCk: false, seatFixed: false, botFails: 0, wrongSeat: pick(['F21', 'E12', 'G12', 'F13', 'F11', 'P12']) };
+    save(); clearHash();
   }
-  go('shows');
+  if (!run.name || !run.age) openSignin(); else go('shows');
 };
+
+/* ---------- SIGN IN through the address bar, AGE from the window width ---------- */
+const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function clearHash() { try { history.replaceState(null, '', location.href.split('#')[0]); } catch (e) {} }
+let heard = '';
+function readHash() {
+  let raw = location.hash.slice(1); try { raw = decodeURIComponent(raw); } catch (e) {}
+  heard = raw.replace(/[+_]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 24);
+  $('#si-heard').textContent = heard || '—';
+  $('#addr-hash').textContent = '#' + heard;
+  $('#si-next').disabled = !/[a-z].*[a-z]/i.test(heard);
+}
+function updAge() {
+  const w = window.innerWidth, a = Math.round(w / 40);
+  $('#age-out').textContent = a; $('#age-math').textContent = `${w}px ÷ 40 = ${a}`;
+  $('#age-ok').disabled = !(a >= 13 && a <= 30);
+  $('#age-note').textContent = a > 30 ? `${a}? Student pricing is for 30 and under. Make the window narrower.`
+    : a < 13 ? 'Under 13? This film is UA13+. Make the window wider.' : `You're ${a}. We'll take your word for it.`;
+}
+function siPane(p) {
+  $('#si-name').classList.toggle('on', p === 'name'); $('#si-age').classList.toggle('on', p === 'age');
+  const sp = $$('#si-steps span'); sp[0].className = p === 'name' ? 'on' : 'done'; sp[1].className = p === 'age' ? 'on' : '';
+  window.removeEventListener('hashchange', readHash); window.removeEventListener('resize', updAge);
+  if (p === 'name') { const u = location.href.split('#')[0]; $('#addr-url').textContent = u.length > 30 ? '…' + u.slice(-29) : u; readHash(); window.addEventListener('hashchange', readHash); }
+  else { updAge(); window.addEventListener('resize', updAge); }
+}
+function openSignin() { $('#m-signin').classList.add('on'); siPane(run.name ? 'age' : 'name'); }
+function closeSignin() { $('#m-signin').classList.remove('on'); window.removeEventListener('hashchange', readHash); window.removeEventListener('resize', updAge); }
+$('#si-next').onclick = () => { run.name = heard; save(); toast(`Signed in as ${heard}. No password needed. What could go wrong?`); siPane('age'); };
+$('#age-ok').onclick = () => { updAge(); if ($('#age-ok').disabled) return; run.age = Math.round(window.innerWidth / 40); save(); closeSignin(); go('shows'); };
+$('#si-x').onclick = closeSignin;
+$('.signin').onclick = () => toast('There is no sign-in button. Click Book tickets and you\'ll see.');
 $('#logo').onclick = e => { e.preventDefault(); go('home'); };
 
 /* ---------- SHOWTIMES ---------- */
@@ -540,7 +686,7 @@ let dogLast = 0;
 function dogLoop(t) {
   const dt = dogLast ? Math.min(.1, (t - dogLast) / 1000) : 1 / 60; dogLast = t;
   const tx = dog.pc ? dog.pc.x : dog.mx, ty = dog.pc ? dog.pc.y : dog.my + 26;
-  const k = 1 - Math.pow(1 - (dog.pc ? .12 : .05), dt * 60);   // same speed at any frame rate
+  const k = 1 - Math.pow(1 - (dog.pc ? .12 : DOG_SPEED), dt * 60);   // same speed at any frame rate
   const vx = (tx - dog.x) * k;
   dog.x += vx; dog.y += (ty - dog.y) * k;
   if (Math.abs(vx) > .35) dog.face = vx > 0 ? 1 : -1;
@@ -559,7 +705,7 @@ function dogLoop(t) {
   // someone else always eyes up F12 the first time the usher gets close
   if (run && !run.f12Held && target && !target.sold) {
     const r = target.el.getBoundingClientRect();
-    if (Math.hypot(r.left + r.width / 2 - dog.x, r.top + r.height / 2 - dog.y) < 70) { run.f12Held = true; save(); holdSeat(target, 4200); toast('Someone else is looking at F12…'); }
+    if (Math.hypot(r.left + r.width / 2 - dog.x, r.top + r.height / 2 - dog.y) < 70) { run.f12Held = true; save(); holdSeat(target, F12_HOLD_MS); toast('Someone else is looking at F12…'); }
   }
   dog.raf = requestAnimationFrame(dogLoop);
 }
@@ -623,7 +769,7 @@ $('#back').onclick = () => go('shows');
 $('#tcount').onclick = () => openCount(false);
 
 /* hold to pay */
-const HOLD_MS = 2200;
+const HOLD_MS = PAY_HOLD_MS;
 let holdStart = 0, holdIv = 0;
 function holdTick() {
   const p = Math.min(1, (performance.now() - holdStart) / HOLD_MS);
@@ -638,28 +784,144 @@ function paid() {
     toast(sel.length > 1 ? 'Your booking request is for one seat: F12. Change the ticket count to 1.' : `${sel[0].id}? Your booking request is for F12. Payment declined.`, 3800);
     return;
   }
-  openOtp();
+  openCheckout();
 }
 
-/* ---------- OTP: delivered to the browser tab title, typed with Caps Lock ---------- */
+/* ---------- CHECKOUT: bot check → review → terms → OTP ---------- */
+const CK = ['bot', 'review', 'terms', 'otp'];
+function openCheckout() { run.inCk = true; save(); $('#m-ck').classList.add('on'); ckGo(run.ck || 'bot'); }
+function closeCheckout() { ckStop(); $('#m-ck').classList.remove('on'); if (run) { run.inCk = false; save(); } }
+function ckStop() { botStop(); cursorsOff(); otpStop(); }
+function ckGo(step) {
+  ckStop();
+  run.ck = step; save();
+  const at = CK.indexOf(step);
+  CK.forEach((c, i) => { $('#ck-' + c).classList.toggle('on', c === step); $$('#ck-steps span')[i].className = i === at ? 'on' : i < at ? 'done' : ''; });
+  ({ bot: botStart, review: reviewStart, terms: termsStart, otp: otpStart })[step]();
+}
+$('#ck-x').onclick = closeCheckout;
+const showLine = () => { const c = CINEMAS[run.show ? run.show.c : 0]; return `${run.show ? run.show.t : c.times[0][0]} · ${c.name.split(':')[0]}`; };
+
+/* 1. anti-scalper: tick 200 boxes in one second (only possible from the console) */
+const BOTS = BOT_BOXES;
+$('#botgrid').innerHTML = '<input type="checkbox" aria-label="box">'.repeat(BOTS);
+const boxes = $$('#botgrid input');
+const bot = { t: 0, first: null, failed: false, done: false };
+const HINTS = ['',
+  'Robots don\'t click boxes. Robots press <b>F12</b>. (Yes, like the seat.)',
+  'Press <b>F12</b>, open the <b>Console</b>, and make the boxes tick themselves. They live in <code>#botgrid</code>.',
+  'Fine. Press Reset, then paste this in the Console: <code>$$(\'#botgrid input\').forEach(b =&gt; b.click())</code>'];
+function showHint() { const h = HINTS[Math.min(HINTS.length - 1, run.botFails || 0)]; $('#bot-hint').innerHTML = h; $('#bot-hint').classList.toggle('on', !!h); }
+function botReset() { boxes.forEach(b => b.checked = false); bot.first = null; bot.failed = false; $('#bot-reset').style.display = 'none'; $('#bot-drain').style.width = '0'; $('#bot-verdict').textContent = 'Waiting for a machine…'; }
+function botPoll() {
+  if (bot.done || bot.failed) return;
+  const n = boxes.reduce((c, b) => c + b.checked, 0);
+  if (!n) { bot.first = null; $('#bot-drain').style.width = '0'; return; }
+  const now = performance.now(); if (bot.first === null) bot.first = now;
+  const dt = now - bot.first;
+  $('#bot-drain').style.width = Math.min(100, dt / 10) + '%';
+  if (n === BOTS && dt <= 1000) {
+    bot.done = true; clearInterval(bot.t);
+    $('#bot-verdict').textContent = 'Beep boop. Verified robot. Welcome, fellow human.';
+    setTimeout(() => ckGo('review'), 400);
+  } else if (dt > 1000) {
+    bot.failed = true; run.botFails = (run.botFails || 0) + 1; save();
+    $('#bot-att').textContent = run.botFails;
+    $('#bot-verdict').textContent = pick(['Too human.', 'We detected a pulse.', 'Organic behaviour detected.', 'Suspiciously human.']);
+    $('#bot-reset').style.display = ''; showHint();
+  }
+}
+$('#botgrid').addEventListener('change', () => { if (bot.failed) $('#bot-verdict').textContent = 'Failed. Press Reset to try again.'; });
+$('#bot-reset').onclick = botReset;
+function botStart() {
+  botReset(); bot.done = false; $('#bot-att').textContent = run.botFails || 0; showHint();
+  clearInterval(bot.t); bot.t = setInterval(botPoll, 40);
+  console.log('%cHello, robot.', 'font:28px Anton, Impact, sans-serif;color:#F23D0C');
+}
+function botStop() { clearInterval(bot.t); }
+
+/* 2. review: our records say F21. Dispute by typing the seat backwards. */
+function makeTypo(n) {
+  const a = [...n];
+  for (let i = 1; i < a.length - 1; i++) if (/[a-z]/i.test(a[i]) && /[a-z]/i.test(a[i + 1]) && a[i].toLowerCase() !== a[i + 1].toLowerCase()) { [a[i], a[i + 1]] = [a[i + 1], a[i]]; return a.join(''); }
+  return n + 'h';
+}
+function reviewStart() {
+  const ws = run.wrongSeat || 'F21';
+  const seat = run.seatFixed ? `<s>${ws}</s>F12` : ws;
+  $('#rv-sum').innerHTML = `<div><span>Name</span><b>${esc(makeTypo(run.name || 'Guest'))}</b></div><div><span>Seat</span><b>${seat} · ${target.cat}</b></div><div><span>Show</span><span>Tue 13 Oct · ${esc(showLine())}</span></div><div><span>Age</span><span>${(run.age || 0) + 1} (rounded up)</span></div><div><span>Convenience fee</span><span>₹28.32</span></div><div><span>Emotional damage</span><span>Free</span></div><div class="tot"><span>Amount payable</span><span>₹${PRICE[target.cat] + 28}.32</span></div>`;
+  $('#rv-err').textContent = ''; $('#rv-dispute').classList.remove('on'); $('#rv-in').value = '';
+  $('#rv-wrong').style.display = run.seatFixed ? 'none' : '';
+}
+$('#rv-ok').onclick = () => {
+  if (!run.seatFixed) { $('#rv-err').textContent = `Payment declined: your request was for F12, but this booking says ${run.wrongSeat || 'F21'}. Our records are never wrong, so it must be you.`; return; }
+  ckGo('terms');
+};
+$('#rv-wrong').onclick = () => { $('#rv-dispute').classList.add('on'); $('#rv-in').focus(); };
+$('#rv-in').addEventListener('input', () => {
+  if ($('#rv-in').value.replace(/\s/g, '').toUpperCase() === '21F') { run.seatFixed = true; save(); reviewStart(); toast('Record corrected. Reluctantly.'); }
+});
+
+/* 3. terms: ten cursors, one of them is real */
+const CUR_SVG = '<svg viewBox="-1 -1 14 21"><polygon points="0,0 0,16 4,12.4 7,18.6 9.6,17.4 6.7,11.4 11.6,11.4" fill="#1A1A1A" stroke="#fff" stroke-width="1.1" stroke-linejoin="round"/></svg>';
+const TF = [
+  (x, y) => [x, y],
+  (x, y, W) => [W - x, y],
+  (x, y, W, H) => [x, H - y],
+  (x, y, W, H) => [W - x, H - y],
+  (x, y, W, H, t, s) => { s.x = s.x == null ? x : s.x + (x - s.x) * .07; s.y = s.y == null ? y : s.y + (y - s.y) * .07; return [s.x, s.y]; },
+  (x, y, W, H) => [W / 2 + (x - W / 2) * 1.45, H / 2 + (y - H / 2) * 1.45],
+  (x, y, W, H) => [W / 2 + (x - W / 2) * .6, H / 2 + (y - H / 2) * .6],
+  (x, y, W, H) => [W / 2 - (y - H / 2) * (W / H), H / 2 + (x - W / 2) * (H / W)],
+  (x, y, W, H, t) => [x + 150 * Math.sin(t / 700), y + 90 * Math.cos(t / 560)],
+  (x, y, W, H) => [y / H * W, x / W * H]
+];
+const cz = { els: [], map: [], st: [], x: -100, y: -100, raf: 0, auto: 0, in: false, checked: false, on: false };
+function shuffleCursors() { cz.map = TF.map((_, i) => i).sort(() => Math.random() - .5); cz.st = TF.map(() => ({})); }
+function curLoop(t) {
+  const W = window.innerWidth, H = window.innerHeight;
+  cz.els.forEach((el, i) => { const [x, y] = TF[cz.map[i]](cz.x, cz.y, W, H, t, cz.st[i]); el.style.transform = `translate(${x}px, ${y}px)`; el.style.opacity = cz.in ? 1 : 0; });
+  cz.raf = requestAnimationFrame(curLoop);
+}
+const curMove = e => { cz.x = e.clientX; cz.y = e.clientY; cz.in = true; };
+const curOut = e => { if (!e.relatedTarget) cz.in = false; };
+function setCheck(v) { cz.checked = v; $('#tos-check').classList.toggle('on', v); $('#tos-check .box').textContent = v ? '✓' : ''; }
+function termsStart() {
+  const layer = $('#cursors'); layer.innerHTML = CUR_SVG.repeat(10); layer.style.display = 'block';
+  cz.els = [...layer.querySelectorAll('svg')]; shuffleCursors(); setCheck(false); cz.on = true;
+  document.body.classList.add('nocur');
+  document.addEventListener('mousemove', curMove); document.addEventListener('mouseout', curOut);
+  cz.raf = requestAnimationFrame(curLoop);
+  cz.auto = setInterval(() => { shuffleCursors(); toast('Cursors reshuffled for your security.'); }, 15000);
+}
+function cursorsOff() {
+  if (!cz.on) return; cz.on = false;
+  cancelAnimationFrame(cz.raf); clearInterval(cz.auto);
+  document.removeEventListener('mousemove', curMove); document.removeEventListener('mouseout', curOut);
+  document.body.classList.remove('nocur'); $('#cursors').style.display = 'none';
+}
+$('#tos-check').onclick = () => setCheck(!cz.checked);
+$('#tos-agree').onclick = () => {
+  if (!cz.checked) { shuffleCursors(); toast('Tick the box first. Cursors reshuffled as punishment.'); return; }
+  ckGo('otp');
+};
+$('#tos-disagree').onclick = () => { setCheck(false); shuffleCursors(); toast('Disagreement noted. And ignored. Box unticked.'); };
+
+/* 4. OTP: delivered to the browser tab title, typed with Caps Lock */
 let otp = { digits: [], taps: 0, t: 0, busy: false }, titleIv = 0;
-function openOtp() {
-  if (!run.otp) { run.otp = Array.from({ length: 3 }, () => 1 + Math.floor(Math.random() * 4)).join(''); save(); }
-  const price = PRICE[target.cat];
-  $('#summary').innerHTML = `<div><span>Chaos by Design · ${run.show ? run.show.t : ''}</span><span>Hindi 2D</span></div><div><span>Seat</span><b>F12 (${target.cat})</b></div><div><span>Ticket price</span><span>₹${price}.00</span></div><div><span>Convenience fee</span><span>₹28.32</span></div><div><span>Emotional damage</span><span>Free</span></div><div class="tot"><span>Amount payable</span><span>₹${price + 28}.32</span></div>`;
+function otpStart() {
+  if (!run.otp) { run.otp = Array.from({ length: 2 }, () => 1 + Math.floor(Math.random() * 3)).join(''); save(); }
   otp = { digits: [], taps: 0, t: 0, busy: false }; renderOtp();
   $('#otp-msg').textContent = 'Click inside this box first so it can hear your Caps Lock.';
-  $('#m-otp').classList.add('on');
   let flip = false;
   clearInterval(titleIv);
   titleIv = setInterval(() => { flip = !flip; document.title = flip ? `(1) Your SeatSnatch OTP: ${run.otp.split('').join(' ')}` : BASE_TITLE; }, 1800);
   document.addEventListener('keydown', otpKey);
   if (/Mac/i.test(navigator.platform || '')) document.addEventListener('keyup', otpKey);
 }
-function closeOtp() {
+function otpStop() {
   clearInterval(titleIv); document.title = BASE_TITLE; clearTimeout(otp.t);
   document.removeEventListener('keydown', otpKey); document.removeEventListener('keyup', otpKey);
-  $('#m-otp').classList.remove('on');
 }
 function renderOtp() {
   $$('#slots .slot').forEach((s, i) => {
@@ -672,11 +934,11 @@ function otpKey(e) {
   if (!(e.key === 'CapsLock' || e.code === 'CapsLock') || otp.busy) return;
   otp.taps = Math.min(9, otp.taps + 1); renderOtp();
   $('#otp-msg').textContent = 'Locking in…';
-  clearTimeout(otp.t); otp.t = setTimeout(otpCommit, 1300);
+  clearTimeout(otp.t); otp.t = setTimeout(otpCommit, OTP_COMMIT_MS);
 }
 function otpCommit() {
   otp.digits.push(otp.taps); otp.taps = 0; renderOtp();
-  if (otp.digits.length < 3) { $('#otp-msg').textContent = `Digit ${otp.digits.length} locked.`; return; }
+  if (otp.digits.length < 2) { $('#otp-msg').textContent = 'Digit 1 locked.'; return; }
   if (otp.digits.join('') === run.otp) {
     otp.busy = true; $('#otp-msg').textContent = 'Verified. Printing your ticket…';
     setTimeout(confirmBooking, 700);
@@ -685,11 +947,10 @@ function otpCommit() {
     setTimeout(() => { $('#slots').classList.remove('shake'); otp.digits = []; otp.busy = false; renderOtp(); }, 900);
   }
 }
-$('#otp-x').onclick = closeOtp;
 
 /* ---------- CONFIRMATION ---------- */
 function confirmBooking() {
-  closeOtp();
+  closeCheckout();
   run.done = true; run.ms = Date.now() - run.t0; save();
   const times = load(TIMES_KEY, []); times.push({ ms: run.ms, at: Date.now() }); store(TIMES_KEY, times.slice(-30));
   go('done');
@@ -713,8 +974,9 @@ if (new URLSearchParams(location.search).has('reset')) { drop(RUN_KEY); history.
 run = load(RUN_KEY, null);
 if (run && run.seed != null) {
   if (run.done) { buildSeats(run.seed); go('done'); }
-  else if (run.view === 'seats') { go('seats'); toast('Welcome back. Reloading doesn\'t stop the clock.'); }
-  else go(run.view === 'home' ? 'home' : 'shows');
+  else if (run.view === 'seats') { go('seats'); if (run.inCk) openCheckout(); toast('Welcome back. Reloading doesn\'t stop the clock.'); }
+  else if (run.view === 'shows') go('shows');
+  else { go('home'); if (!run.name || !run.age) openSignin(); }
 } else run = null;
 })();
 </script>
