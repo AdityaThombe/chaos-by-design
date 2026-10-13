@@ -250,9 +250,10 @@ a{color:inherit;text-decoration:none}
 .g-ins.on{display:block}
 .g-ins h4{font-size:12px;margin:10px 0 2px;color:#3a3a3f}
 .g-ins p{margin:0}
-.g-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:5px;padding:14px 16px 8px}
+.g-grid{display:grid;grid-template-columns:repeat(16,1fr);gap:4px;padding:14px 16px 8px}
 .g-cell{aspect-ratio:1;border:1.5px solid #b4b4ba;border-radius:2px;background:#fff;padding:0}
-.g-cell.soft{border-radius:32%}
+.g-cell.soft{border-radius:30%}
+.g-cell.soft2{border-radius:40%}
 .g-cell.circ{border-radius:50%}
 .g-cell.on{background:var(--brand);border-color:var(--brand)}
 .g-err{color:#D0021B;font-size:12.5px;font-weight:600;min-height:17px;margin:0 16px 6px}
@@ -672,8 +673,10 @@ const CINEMAS = [
 $('#cinemas').innerHTML = CINEMAS.map((c, ci) => `<div class="cine"><div class="ci"><b>♡ ${c.name}</b><small>${c.tags.map(t => `<span>${t}</span>`).join('')}</small></div><div><div class="times">${c.times.map(([t, s]) => `<button class="time${s === 'ff' ? ' ff' : ''}" data-c="${ci}" data-t="${t}" ${s === 'sold' ? 'disabled' : ''}>${t}<small>${s === 'sold' ? 'SOLD OUT' : 'DOLBY 7.1'}</small></button>`).join('')}</div><div class="cine-note">Cancellation available</div></div></div>`).join('');
 $('#cinemas').addEventListener('click', e => {
   const b = e.target.closest('.time'); if (!b || b.disabled || !run) return;
-  run.show = { c: +b.dataset.c, t: b.dataset.t }; save();
-  openCount(true);
+  // No "How many seats?" popup here: you get 4 tickets. The only way to change it is the
+  // small "4 Tickets ✎" button on the seat map.
+  run.show = { c: +b.dataset.c, t: b.dataset.t }; run.count = run.count || 4; save();
+  go('seats');
 });
 
 /* ---------- HOW MANY SEATS (defaults to 4, because you obviously have friends) ---------- */
@@ -900,11 +903,17 @@ $('#ck-x').onclick = closeCheckout;
 const showLine = () => { const c = CINEMAS[run.show ? run.show.c : 0]; return `${run.show ? run.show.t : c.times[0][0]} · ${c.name.split(':')[0]}`; };
 
 /* 1. "I'm not a robot" → SnatchGuard grid. The rule ("click all the circles") is only in the instructions. */
-const G_COLS = 12, G_ROWS = 8;
-const G_CIRCLES = [3, 17, 26, 40, 52, 69, 75, 90];    // fixed positions of the circles
-const G_DECOYS = [8, 21, 33, 47, 58, 64, 83, 94];     // rounded squares: look close, aren't circles
+const G_COLS = 16, G_ROWS = 10;
+// fixed circle positions (row, col from 1): r1c7 r2c13 r3c3 r4c10 r6c5 r7c15 r8c8 r10c2
+const G_CIRCLES = [6, 28, 34, 57, 84, 110, 119, 145];
+// ~45 decoys in fixed spots (same seed every load): rounded squares, some almost round
+const G_DECOYS = (() => {
+  const rng = mulberry32(42), out = new Map();
+  while (out.size < 45) { const i = Math.floor(rng() * G_COLS * G_ROWS); if (!G_CIRCLES.includes(i)) out.set(i, rng() < .55 ? 'soft2' : 'soft'); }
+  return out;
+})();
 $('#g-grid').innerHTML = Array.from({ length: G_COLS * G_ROWS }, (_, i) =>
-  `<button class="g-cell${G_CIRCLES.includes(i) ? ' circ' : G_DECOYS.includes(i) ? ' soft' : ''}" data-i="${i}" aria-label="box"></button>`).join('');
+  `<button class="g-cell${G_CIRCLES.includes(i) ? ' circ' : G_DECOYS.has(i) ? ' ' + G_DECOYS.get(i) : ''}" data-i="${i}" aria-label="box"></button>`).join('');
 const gCells = $$('#g-grid .g-cell');
 const guard = { locked: false, t: 0 };
 function guardReset() { gCells.forEach(c => c.classList.remove('on')); $('#g-refresh').disabled = true; $('#g-err').textContent = ''; guard.locked = false; }
