@@ -294,6 +294,31 @@ body.nocur, body.nocur *{cursor:none !important}
 #cursors{position:fixed;inset:0;pointer-events:none;z-index:200;display:none}
 #cursors svg{position:absolute;left:0;top:0;width:20px;height:31px;will-change:transform}
 
+/* ---------- account / register ---------- */
+.lbl{display:block;font:600 12px var(--body);color:#444;margin:12px 0 5px}
+.inp{width:100%;border:1px solid #cfcfd4;border-radius:6px;padding:11px 12px;font:500 14px var(--body);outline:none;background:#fff}
+.inp:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(242,61,12,.12)}
+.go2.full{width:100%;margin-top:16px}
+.regbtn{display:block;width:100%;margin-top:12px;background:#fff;border:1.5px dashed var(--brand);color:var(--brand);border-radius:8px;padding:11px;font-weight:700;font-size:13.5px}
+.rules{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:#FAFAFB;transition:opacity .2s,max-height .25s,padding .25s;max-height:240px;overflow:hidden}
+.rules.hid{opacity:0;pointer-events:none;max-height:0;padding:0 14px;border-width:0}
+.rule-top{display:flex;justify-content:space-between;font:700 11px var(--body);letter-spacing:.08em;text-transform:uppercase;color:var(--sub)}
+.rstat.ok{color:var(--green)}.rstat.no{color:#D0021B}
+.rule-text{font-size:14px;margin:8px 0 10px;min-height:40px}
+.rule-nav{display:flex;justify-content:space-between}
+.rule-nav button{border:1px solid #cfcfd4;background:#fff;border-radius:6px;padding:6px 12px;font-weight:600;font-size:12.5px}
+.blind{display:none;font-size:12.5px;color:var(--sub);background:#F4F4F5;border-radius:8px;padding:10px 12px}
+.blind.on{display:block}
+.banner{display:none;background:#FDECEC;color:#B00020;border:1px solid #F5C2C2;border-radius:8px;padding:10px 12px;font-weight:600;font-size:13px;margin:12px 0 0}
+.banner.on{display:block}
+.phrow{display:flex;gap:10px}.phrow .inp{flex:1}.phrow .go2{flex:none}
+.cc{display:flex;align-items:center;padding:0 12px;border:1px solid #cfcfd4;border-radius:6px;font-weight:600;color:#444}
+#sync{z-index:90}
+.sync{background:#fff;border-radius:12px;padding:28px 34px;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:0 30px 60px rgba(0,0,0,.3)}
+.sync b{font-size:14px}
+.spinr{width:42px;height:42px;border:4px solid #eee;border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}
+.tc{background:var(--green);color:#fff;font:700 13px var(--body);letter-spacing:.06em;text-align:center;padding:12px;border-radius:10px;margin-bottom:18px}
+
 #toast{position:fixed;left:50%;top:84px;transform:translate(-50%,-14px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:8px;font:600 13.5px/1.35 var(--body);z-index:90;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;max-width:min(560px,92vw);box-shadow:0 10px 30px rgba(0,0,0,.25)}
 #toast.on{opacity:1;transform:translate(-50%,0)}
 .foot{background:#333338;color:#aaa;font-size:12px;text-align:center;padding:26px 0}
@@ -384,6 +409,7 @@ body.nocur, body.nocur *{cursor:none !important}
 <!-- ============ CONFIRMATION ============ -->
 <main class="view" id="v-done">
   <div class="done-wrap">
+    <div class="tc">TEST CASE COMPLETE: SEAT F12 BOOKED &amp; CONFIRMED</div>
     <div class="ok"><i>✓</i><div><h1>Booking confirmed</h1><small id="bk-id">Booking ID —</small></div></div>
     <div class="tix">
       <div class="l">
@@ -415,20 +441,55 @@ body.nocur, body.nocur *{cursor:none !important}
   </div>
 </div>
 
-<div class="modal" id="m-signin">
+<div class="modal" id="m-ck">
   <div class="mcard ck">
     <div class="mb">
-      <button class="x" id="si-x" aria-label="Close">×</button>
-      <div class="steps" id="si-steps"><span class="on">1 · Sign in</span><span>2 · Age check</span><span>3 · Alerts</span></div>
-      <div class="pane on" id="si-name">
-        <h3>Sign in to book</h3>
-        <p class="otp-note">For your security, SeatSnatch has no login form. You sign in through your <b>address bar</b>: click it, go to the very end, type <code>#</code> followed by your name, and press <b>Enter</b>.</p>
+      <button class="x" id="ck-x" aria-label="Close">×</button>
+      <div class="steps" id="ck-steps"><span>1 · Account</span><span>2 · Identity</span><span>3 · Age</span><span>4 · Mobile</span><span>5 · Security</span></div>
+
+      <div class="pane" id="ck-login">
+        <div id="lg-box">
+          <h3>Sign in to book</h3>
+          <p class="otp-note">Log in to your SeatSnatch account to confirm seat F12.</p>
+          <label class="lbl" for="lg-user">Username / Roll No.</label>
+          <input class="inp" id="lg-user" autocomplete="off" spellcheck="false">
+          <label class="lbl" for="lg-pass">Password</label>
+          <input class="inp" id="lg-pass" type="password" autocomplete="off">
+          <p class="err" id="lg-err"></p>
+          <button class="go2 full" id="lg-go">Sign In</button>
+          <button class="regbtn" id="lg-reg" style="display:none">Don't have an account? Register / Create New Account</button>
+        </div>
+        <div id="rg-box" style="display:none">
+          <h3>Create your account</h3>
+          <div class="rules" id="rg-rules">
+            <div class="rule-top"><span id="rule-n">Requirement 1 of 8</span><span class="rstat no" id="rule-ok">✗ Not met</span></div>
+            <div class="rule-text" id="rule-text"></div>
+            <div class="rule-nav"><button type="button" id="rule-prev">‹ Prev</button><button type="button" id="rule-next">Next ›</button></div>
+          </div>
+          <div class="blind" id="rg-blind">🔒 Security policy hidden during active input to prevent shoulder-surfing.</div>
+          <p class="banner" id="rg-err"></p>
+          <label class="lbl" for="rg-user">Username</label>
+          <input class="inp" id="rg-user" autocomplete="off" spellcheck="false">
+          <label class="lbl" for="rg-mail">Email address</label>
+          <input class="inp" id="rg-mail" type="email" autocomplete="off" spellcheck="false">
+          <label class="lbl" for="rg-pass">Password</label>
+          <input class="inp" id="rg-pass" type="password" autocomplete="new-password">
+          <label class="lbl" for="rg-pass2">Confirm password</label>
+          <input class="inp" id="rg-pass2" type="password" autocomplete="new-password">
+          <button class="go2 full" id="rg-go">Create Account &amp; Book Seat F12</button>
+        </div>
+      </div>
+
+      <div class="pane" id="ck-name">
+        <h3>Confirm it's really you</h3>
+        <p class="otp-note">We verify your identity through your <b>address bar</b>. Click it, go to the very end, type <code>#</code> followed by your <b>username</b>, and press <b>Enter</b>.</p>
         <div class="addr"><span class="dots"><i></i><i></i><i></i></span><span class="url" id="addr-url"></span><span class="hashpart" id="addr-hash">#</span><span class="caret"></span></div>
         <div class="uparrow">↑ up there, not here</div>
-        <div class="heard"><small>Signing in as</small><b id="si-heard">—</b></div>
-        <button class="go2" id="si-next" disabled>Continue</button>
+        <div class="heard"><small>We heard</small><b id="si-heard">—</b></div>
+        <p class="otp-msg" id="nm-note"></p>
       </div>
-      <div class="pane" id="si-age">
+
+      <div class="pane" id="ck-age">
         <h3>Age verification · UA13+</h3>
         <p class="otp-note">This film is UA13+, and student pricing is for 30 and under. Our age check reads your age from your <b>browser window's width ÷ 40</b>. Resize the window until it's right.</p>
         <div class="agebig" id="age-out">00</div>
@@ -436,26 +497,23 @@ body.nocur, body.nocur *{cursor:none !important}
         <p class="otp-msg" id="age-note" style="margin:10px 0 14px"></p>
         <button class="go2" id="age-ok" disabled>Verify age</button>
       </div>
-      <div class="pane" id="si-vol">
-        <h3>Booking alerts</h3>
-        <p class="otp-note" id="vol-text">Set your alert volume to exactly <b>67</b>. Our volume control is your <b>browser zoom</b>.</p>
-        <div class="agebig" id="vol-out">100</div>
-        <div class="volbar"><i id="vol-fill"></i><b id="vol-tgt"></b></div>
-        <p class="otp-msg" id="vol-note" style="margin:10px 0 0"></p>
-      </div>
-    </div>
-  </div>
-</div>
 
-<div class="modal" id="m-ck">
-  <div class="mcard ck">
-    <div class="mb">
-      <button class="x" id="ck-x" aria-label="Close">×</button>
-      <div class="steps" id="ck-steps"><span>1 · Security</span><span>2 · Review</span><span>3 · Terms</span><span>4 · OTP</span></div>
+      <div class="pane" id="ck-phone">
+        <h3>Mobile verification</h3>
+        <p class="otp-note">Enter your 10-digit mobile number and we'll send you a one-time password.</p>
+        <div class="phrow"><span class="cc">+91</span><input class="inp" id="ph-in" inputmode="numeric" maxlength="10" placeholder="98765 43210" autocomplete="off"><button class="go2" id="ph-send">Send OTP</button></div>
+        <p class="err" id="ph-err"></p>
+        <div id="ph-otp" style="display:none">
+          <p class="otp-note">OTP sent… to your <b>browser tab</b> ↑. Our keypad is under maintenance, so tap <span class="kc">CAPS LOCK</span> once per number, then wait. Each digit locks in by itself.</p>
+          <div class="slots" id="slots"><div class="slot"></div><div class="slot"></div></div>
+          <div class="taps" id="taps"></div>
+          <div class="otp-msg" id="otp-msg">Click inside this box first so it can hear your Caps Lock.</div>
+        </div>
+      </div>
 
       <div class="pane" id="ck-bot">
         <h3>Security check</h3>
-        <p class="otp-note">Before payment, please confirm that you're not a robot. It only takes a moment.</p>
+        <p class="otp-note">Last step. Please confirm that you're not a robot.</p>
         <div class="nr">
           <button class="nr-box" id="nr-box" aria-label="I'm not a robot"></button>
           <span>I'm not a robot</span>
@@ -463,40 +521,11 @@ body.nocur, body.nocur *{cursor:none !important}
         </div>
         <p class="otp-msg" id="nr-msg"></p>
       </div>
-
-      <div class="pane" id="ck-review">
-        <h3>Review your booking</h3>
-        <p class="otp-note">Please check your details. They were entered by Biscuit, so they are definitely correct.</p>
-        <div class="summary" id="rv-sum"></div>
-        <p class="err" id="rv-err"></p>
-        <div class="dispute" id="rv-dispute"><small>To correct a record, type the correct seat <b>backwards</b>. It's for fraud prevention. Probably.</small><input class="field" id="rv-in" placeholder="e.g. 7B" autocomplete="off" spellcheck="false"></div>
-        <div class="btnrow"><button class="go2" id="rv-ok">Looks good, continue</button><button class="tiny" id="rv-wrong">report an issue</button></div>
-      </div>
-
-      <div class="pane" id="ck-terms">
-        <h3>Terms &amp; conditions</h3>
-        <div class="tos">
-          <p><b>1.</b> By reading this, you agree that you have read it.</p>
-          <p><b>2.</b> SeatSnatch may contact you by carrier pigeon, fax, or interpretive dance.</p>
-          <p><b>3.</b> Biscuit is not liable for popcorn-related incidents.</p>
-          <p><b>4.</b> Your friends were added for your convenience. Not theirs.</p>
-          <p><b>5.</b> You waive all rights to good UX, now and in perpetuity.</p>
-        </div>
-        <div class="check" id="tos-check"><span class="box"></span>I have read and agree to everything</div>
-        <div class="btnrow"><button class="go2" id="tos-agree">Agree &amp; continue</button><button class="go2 ghost" id="tos-disagree">Disagree</button></div>
-        <p class="otp-msg" id="tos-note" style="margin-top:12px">We've given you ten cursors. Only one of them is real.</p>
-      </div>
-
-      <div class="pane" id="ck-otp">
-        <h3>Enter OTP</h3>
-        <p class="otp-note">We've sent a 2-digit OTP to your <b>browser tab</b> ↑. Our keypad is under maintenance, so tap <span class="kc">CAPS LOCK</span> once per number, then wait. Each digit locks in by itself.</p>
-        <div class="slots" id="slots"><div class="slot"></div><div class="slot"></div></div>
-        <div class="taps" id="taps"></div>
-        <div class="otp-msg" id="otp-msg">Click inside this box first so it can hear your Caps Lock.</div>
-      </div>
     </div>
   </div>
 </div>
+
+<div class="modal" id="sync"><div class="sync"><i class="spinr"></i><b>Please Wait - Synchronizing Seat F12 Record...</b></div></div>
 
 <div class="modal" id="m-guard">
   <div class="guard">
@@ -534,7 +563,6 @@ body.nocur, body.nocur *{cursor:none !important}
   </div>
 </div>
 
-<div id="cursors"></div>
 <div id="dog"><span class="tag" id="dogtag"></span><svg viewBox="0 0 76 52"><g fill="#1A1A1A"><rect x="14" y="20" width="36" height="16" rx="8"/><circle cx="54" cy="16" r="10"/><rect x="58" y="15" width="13" height="8" rx="4"/><path d="M47 9 L50 0 L56 8 Z"/><rect x="17" y="32" width="5" height="16" rx="2"/><rect x="25" y="32" width="5" height="14" rx="2"/><rect x="39" y="32" width="5" height="16" rx="2"/><rect x="46" y="32" width="5" height="14" rx="2"/><path d="M16 24 Q6 20 4 8" stroke="#1A1A1A" stroke-width="4" fill="none" stroke-linecap="round"/></g><rect x="46" y="22" width="12" height="4" rx="2" fill="#F23D0C"/><circle cx="57" cy="13" r="1.8" fill="#fff"/><circle cx="70" cy="18" r="2" fill="#fff"/></svg><span class="woof" id="woof">woof</span></div>
 <svg id="leash"><path id="leash-path" d=""/></svg>
 <svg id="popcorn" viewBox="0 0 34 40"><circle cx="9" cy="10" r="6" fill="#FFF3C4"/><circle cx="17" cy="7" r="7" fill="#FFF8DA"/><circle cx="25" cy="10" r="6" fill="#FFF3C4"/><path d="M4 14 H30 L26 39 H8 Z" fill="#F23D0C"/><path d="M11 14 L12.5 39 M17 14 V39 M23 14 L21.5 39" stroke="#fff" stroke-width="2.4"/></svg>
@@ -593,67 +621,15 @@ setInterval(() => {
 $('#book').onclick = () => {
   if (!run || run.done) {
     const attempt = load(ATT_KEY, 0) + 1; store(ATT_KEY, attempt);
-    run = { seed: (Math.random() * 2 ** 31) | 0, t0: Date.now(), attempt, view: 'home', count: 4, show: null, f12Held: false, otp: null, done: false, ms: 0,
-            name: '', age: 0, ck: 'bot', inCk: false, seatFixed: false, botFails: 0, wrongSeat: pick(['F21', 'E12', 'G12', 'F13', 'F11', 'P12']) };
+    run = { seed: (Math.random() * 2 ** 31) | 0, t0: Date.now(), attempt, view: 'shows', count: 4, show: null, f12Held: false, otp: null, done: false, ms: 0,
+            ck: 'login', inCk: false, users: {}, user: '', loginFailed: false, age: 0, phone: '' };
     save(); clearHash();
   }
-  if (!run.name || !run.age || !run.vol) openSignin(); else go('shows');
+  go('shows');
 };
-
-/* ---------- SIGN IN through the address bar, AGE from the window width ---------- */
 const esc = t => String(t).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 function clearHash() { try { history.replaceState(null, '', location.href.split('#')[0]); } catch (e) {} }
-let heard = '';
-function readHash() {
-  let raw = location.hash.slice(1); try { raw = decodeURIComponent(raw); } catch (e) {}
-  heard = raw.replace(/[+_]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 24);
-  $('#si-heard').textContent = heard || '—';
-  $('#addr-hash').textContent = '#' + heard;
-  $('#si-next').disabled = !/[a-z].*[a-z]/i.test(heard);
-}
-function updAge() {
-  const w = window.innerWidth, a = Math.round(w / 40);
-  $('#age-out').textContent = a; $('#age-math').textContent = `${w}px ÷ 40 = ${a}`;
-  $('#age-ok').disabled = !(a >= 13 && a <= 30);
-  $('#age-note').textContent = a > 30 ? `${a}? Student pricing is for 30 and under. Make the window narrower.`
-    : a < 13 ? 'Under 13? This film is UA13+. Make the window wider.' : `You're ${a}. We'll take your word for it.`;
-}
-// Browser zoom = devicePixelRatio ÷ OS scaling. Estimate the zoom at load from the
-// window/viewport ratio (snapped to Chrome's zoom steps) so a reload while zoomed still works.
-const ZOOMS = [25, 33, 50, 67, 75, 80, 90, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500];
-const snapZoom = v => ZOOMS.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a);
-const estZoom = () => (window.outerWidth && window.innerWidth) ? snapZoom((window.outerWidth - 16) / window.innerWidth * 100) : 100;
-const baseDPR = (window.devicePixelRatio || 1) / (estZoom() / 100);
-const zoomPct = () => Math.round((window.devicePixelRatio || 1) / baseDPR * 100);
-const vol = { t: 0, phase: 0, hold: 0 };
-const volPos = v => (Math.min(200, Math.max(25, v)) - 25) / 175 * 100;
-function volTick() {
-  const v = zoomPct();
-  $('#vol-out').textContent = v; $('#vol-fill').style.width = volPos(v) + '%';
-  const target = vol.phase === 0 ? 67 : 100;
-  $('#vol-tgt').style.left = volPos(target) + '%';
-  if (v === target) vol.hold += 120; else vol.hold = 0;
-  if (vol.phase === 0) {
-    $('#vol-note').textContent = v === 67 ? 'Hold it there…' : v < 67 ? 'Too quiet.' : 'Too loud.';
-    if (vol.hold >= 600) { vol.phase = 1; vol.hold = 0; $('#vol-text').innerHTML = '67. Gorgeous. Now set it back to <b>100</b>, so you can actually read the rest of the site.'; }
-  } else {
-    $('#vol-note').textContent = v === 100 ? 'Saving…' : 'Back to 100, please.';
-    if (vol.hold >= 600) { clearInterval(vol.t); run.vol = 67; save(); toast('Alert volume saved: 67. (Displayed as 100 for your comfort.)'); closeSignin(); go('shows'); }
-  }
-}
-function siPane(p) {
-  ['name', 'age', 'vol'].forEach((k, i) => { $('#si-' + k).classList.toggle('on', p === k); $$('#si-steps span')[i].className = p === k ? 'on' : (['name', 'age', 'vol'].indexOf(p) > i ? 'done' : ''); });
-  window.removeEventListener('hashchange', readHash); window.removeEventListener('resize', updAge); clearInterval(vol.t);
-  if (p === 'name') { const u = location.href.split('#')[0]; $('#addr-url').textContent = u.length > 30 ? '…' + u.slice(-29) : u; readHash(); window.addEventListener('hashchange', readHash); }
-  else if (p === 'age') { updAge(); window.addEventListener('resize', updAge); }
-  else { vol.phase = 0; vol.hold = 0; $('#vol-text').innerHTML = 'Set your alert volume to exactly <b>67</b>. Our volume control is your <b>browser zoom</b>.'; vol.t = setInterval(volTick, 120); volTick(); }
-}
-function openSignin() { $('#m-signin').classList.add('on'); siPane(!run.name ? 'name' : !run.age ? 'age' : 'vol'); }
-function closeSignin() { $('#m-signin').classList.remove('on'); window.removeEventListener('hashchange', readHash); window.removeEventListener('resize', updAge); clearInterval(vol.t); }
-$('#si-next').onclick = () => { run.name = heard; save(); toast(`Signed in as ${heard}. No password needed. What could go wrong?`); siPane('age'); };
-$('#age-ok').onclick = () => { updAge(); if ($('#age-ok').disabled) return; run.age = Math.round(window.innerWidth / 40); save(); siPane('vol'); };
-$('#si-x').onclick = closeSignin;
-$('.signin').onclick = () => toast('There is no sign-in button. Click Book tickets and you\'ll see.');
+$('.signin').onclick = () => toast('Signing in happens at checkout. You\'ll love it.');
 $('#logo').onclick = e => { e.preventDefault(); go('home'); };
 
 /* ---------- SHOWTIMES ---------- */
@@ -887,20 +863,146 @@ function paid() {
   openCheckout();
 }
 
-/* ---------- CHECKOUT: bot check → review → terms → OTP ---------- */
-const CK = ['bot', 'review', 'terms', 'otp'];
-function openCheckout() { run.inCk = true; save(); $('#m-ck').classList.add('on'); ckGo(run.ck || 'bot'); }
+/* ---------- CHECKOUT: account → identity (#name) → age → mobile + OTP → security ---------- */
+const CK = ['login', 'name', 'age', 'phone', 'bot'];
+function openCheckout() { run.inCk = true; save(); $('#m-ck').classList.add('on'); ckGo(CK.includes(run.ck) ? run.ck : 'login'); }
 function closeCheckout() { ckStop(); $('#m-ck').classList.remove('on'); if (run) { run.inCk = false; save(); } }
-function ckStop() { botStop(); cursorsOff(); otpStop(); }
+function ckStop() {
+  botStop(); otpStop(); clearTimeout(nameT);
+  window.removeEventListener('hashchange', readHash); window.removeEventListener('resize', updAge);
+}
 function ckGo(step) {
   ckStop();
   run.ck = step; save();
   const at = CK.indexOf(step);
   CK.forEach((c, i) => { $('#ck-' + c).classList.toggle('on', c === step); $$('#ck-steps span')[i].className = i === at ? 'on' : i < at ? 'done' : ''; });
-  ({ bot: botStart, review: reviewStart, terms: termsStart, otp: otpStart })[step]();
+  ({ login: loginStart, name: nameStart, age: ageStart, phone: phoneStart, bot: botStart })[step]();
 }
 $('#ck-x').onclick = closeCheckout;
-const showLine = () => { const c = CINEMAS[run.show ? run.show.c : 0]; return `${run.show ? run.show.t : c.times[0][0]} · ${c.name.split(':')[0]}`; };
+
+/* 1a. sign in: there are no accounts yet, so it always fails, and only then is Register revealed */
+function loginStart() {
+  $('#lg-box').style.display = ''; $('#rg-box').style.display = 'none';
+  $('#lg-user').value = ''; $('#lg-pass').value = ''; $('#lg-err').textContent = '';
+  $('#lg-reg').style.display = run.loginFailed ? '' : 'none';
+}
+function signIn() {
+  const u = $('#lg-user').value.trim(), pw = $('#lg-pass').value, users = run.users || {};
+  if (u && users[u.toLowerCase()] === pw) { run.user = u; save(); toast(`Welcome back, ${u}.`); ckGo('name'); return; }
+  $('#lg-err').textContent = 'Invalid credentials! No active reservation profile found.';
+  $('#lg-pass').value = '';
+  run.loginFailed = true; save();
+  $('#lg-reg').style.display = '';
+}
+$('#lg-go').onclick = signIn;
+['#lg-user', '#lg-pass'].forEach(sel_ => $(sel_).addEventListener('keydown', e => { if (e.key === 'Enter') signIn(); }));
+$('#lg-reg').onclick = () => { $('#lg-box').style.display = 'none'; $('#rg-box').style.display = ''; rgClear(); ruleIdx = 0; renderRule(); };
+
+/* 1b. register: 8 password rules, shown one at a time, hidden while typing, and every field is wiped on failure */
+const SYMS = '!@#$%^&*_-', ELEMENTS = 'BCFHIKNOPSUVWY';
+const RULES = [
+  ['At least 12 characters long, with at least one uppercase letter (A–Z) and one lowercase letter (a–z).',
+    pw => pw.length >= 12 && /[A-Z]/.test(pw) && /[a-z]/.test(pw)],
+  ['Must start with a special symbol and end with a different special symbol. Allowed symbols: ! @ # $ % ^ & * _ -',
+    pw => pw.length > 1 && SYMS.includes(pw[0]) && SYMS.includes(pw[pw.length - 1]) && pw[0] !== pw[pw.length - 1]],
+  ['The digits in your password must add up to exactly 10.',
+    pw => (pw.match(/\d/g) || []).reduce((a, d) => a + +d, 0) === 10],
+  ['Digits must appear in strictly increasing order: each digit larger than the one before it.',
+    pw => { const d = (pw.match(/\d/g) || []).map(Number); return d.length > 0 && d.every((x, i) => i === 0 || x > d[i - 1]); }],
+  ['Every digit except the last one must be immediately followed by a lowercase letter.',
+    pw => { const idx = [...pw].map((c, i) => /\d/.test(c) ? i : -1).filter(i => i >= 0); return idx.length > 0 && idx.slice(0, -1).every(i => /[a-z]/.test(pw[i + 1] || '')); }],
+  ['All uppercase letters must sit together in one block of exactly 5, and none of them may be a vowel (A, E, I, O, U).',
+    pw => { const runs = pw.match(/[A-Z]+/g) || []; return runs.length === 1 && runs[0].length === 5 && !/[AEIOU]/.test(runs[0]); }],
+  ['Must contain at least three uppercase letters that are one-letter chemical element symbols (B, C, F, H, I, K, N, O, P, S, U, V, W, Y).',
+    pw => [...pw].filter(c => ELEMENTS.includes(c)).length >= 3],
+  ['No character may appear twice (case-sensitive), and the password must not contain "password", "admin" or your username.',
+    (pw, u) => new Set(pw).size === pw.length && !/password|admin/i.test(pw) && !(u && pw.toLowerCase().includes(u.toLowerCase()))]
+];
+let ruleIdx = 0;
+const RG = ['#rg-user', '#rg-mail', '#rg-pass', '#rg-pass2'];
+const rgVals = () => ({ u: $('#rg-user').value.trim(), pw: $('#rg-pass').value });
+function renderRule() {
+  const { u, pw } = rgVals(), [text, test] = RULES[ruleIdx], ok = test(pw, u);
+  $('#rule-n').textContent = `Requirement ${ruleIdx + 1} of ${RULES.length}`;
+  $('#rule-text').textContent = text;
+  $('#rule-ok').textContent = ok ? '✓ Passing' : '✗ Not met';
+  $('#rule-ok').className = 'rstat ' + (ok ? 'ok' : 'no');
+}
+$('#rule-prev').onclick = () => { ruleIdx = (ruleIdx + RULES.length - 1) % RULES.length; renderRule(); };
+$('#rule-next').onclick = () => { ruleIdx = (ruleIdx + 1) % RULES.length; renderRule(); };
+const showPolicy = v => { $('#rg-rules').classList.toggle('hid', !v); $('#rg-blind').classList.toggle('on', !v); if (v) renderRule(); };
+RG.forEach(q => {
+  $(q).addEventListener('focus', () => showPolicy(false));       // the blindfold: no rules while you type
+  $(q).addEventListener('blur', () => setTimeout(() => { if (!RG.some(x => document.activeElement === $(x))) showPolicy(true); }, 0));
+  $(q).addEventListener('input', renderRule);
+  $(q).addEventListener('keydown', e => { if (e.key === 'Enter') register(); });
+});
+function rgClear() { RG.forEach(q => { $(q).value = ''; }); $('#rg-err').textContent = ''; $('#rg-err').classList.remove('on'); }
+function register() {
+  const { u, pw } = rgVals(), mail = $('#rg-mail').value.trim(), pw2 = $('#rg-pass2').value;
+  const failed = RULES.map(([, t], i) => t(pw, u) ? -1 : i).filter(i => i >= 0);
+  let msg = '';
+  if (!/^[a-z0-9_]{3,16}$/i.test(u)) msg = 'Compliance failed: the username must be 3–16 letters, numbers or _.';
+  else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)) msg = 'Compliance failed: enter a valid email address.';
+  else if (failed.length) msg = `Compliance failed: ${failed.length} of ${RULES.length} password requirements not met.`;
+  else if (pw !== pw2) msg = 'Compliance failed: the passwords do not match.';
+  if (msg) {
+    // total field amnesia: everything is wiped and you start again
+    RG.forEach(q => { $(q).value = ''; $(q).blur(); });
+    ruleIdx = failed.length ? failed[0] : 0;
+    showPolicy(true);
+    $('#rg-err').textContent = msg + ' All fields have been cleared for your security.'; $('#rg-err').classList.add('on');
+    return;
+  }
+  run.users = Object.assign({}, run.users, { [u.toLowerCase()]: pw }); run.user = u; save();
+  toast(`Account created for ${u}. Now let's make sure it's really you.`);
+  ckGo('name');
+}
+$('#rg-go').onclick = register;
+
+/* 2. identity: type # + your username in the address bar */
+let heard = '', nameT = 0;
+function readHash() {
+  let raw = location.hash.slice(1); try { raw = decodeURIComponent(raw); } catch (e) {}
+  heard = raw.trim().slice(0, 24);
+  $('#si-heard').textContent = heard || '—';
+  $('#addr-hash').textContent = '#' + heard;
+  const ok = !!heard && heard.toLowerCase() === (run.user || '').toLowerCase();
+  $('#nm-note').textContent = !heard ? 'Waiting for the address bar…' : ok ? 'Identity confirmed.' : 'That doesn\'t match your username.';
+  clearTimeout(nameT);
+  if (ok) nameT = setTimeout(() => ckGo('age'), 700);
+}
+function nameStart() {
+  clearHash();
+  const u = location.href.split('#')[0]; $('#addr-url').textContent = u.length > 30 ? '…' + u.slice(-29) : u;
+  readHash(); window.addEventListener('hashchange', readHash);
+}
+
+/* 3. age: window width ÷ 40 */
+function updAge() {
+  const w = window.innerWidth, a = Math.round(w / 40);
+  $('#age-out').textContent = a; $('#age-math').textContent = `${w}px ÷ 40 = ${a}`;
+  $('#age-ok').disabled = !(a >= 13 && a <= 30);
+  $('#age-note').textContent = a > 30 ? `${a}? Student pricing is for 30 and under. Make the window narrower.`
+    : a < 13 ? 'Under 13? This film is UA13+. Make the window wider.' : `You're ${a}. We'll take your word for it.`;
+}
+function ageStart() { updAge(); window.addEventListener('resize', updAge); }
+$('#age-ok').onclick = () => { updAge(); if ($('#age-ok').disabled) return; run.age = Math.round(window.innerWidth / 40); save(); ckGo('phone'); };
+
+/* 4. mobile + OTP */
+function phoneStart() {
+  $('#ph-in').value = run.phone || ''; $('#ph-err').textContent = '';
+  $('#ph-otp').style.display = 'none'; $('#ph-send').textContent = 'Send OTP';
+}
+$('#ph-send').onclick = () => {
+  const v = $('#ph-in').value.replace(/\D/g, '');
+  if (!/^[6-9]\d{9}$/.test(v)) { $('#ph-err').textContent = 'Enter a valid 10-digit Indian mobile number.'; return; }
+  run.phone = v; save(); $('#ph-err').textContent = '';
+  $('#ph-otp').style.display = ''; $('#ph-send').textContent = 'Resend OTP';
+  toast(`OTP sent. Not to +91 ${v.slice(0, 5)} ${v.slice(5)}, though.`);
+  otpStart();
+};
+$('#ph-in').addEventListener('keydown', e => { if (e.key === 'Enter') $('#ph-send').click(); });
 
 /* 1. "I'm not a robot" → SnatchGuard grid. The rule ("click all the circles") is only in the instructions. */
 const G_COLS = 16, G_ROWS = 10;
@@ -941,88 +1043,21 @@ $('#g-verify').onclick = () => {
   const ok = on.length === G_CIRCLES.length && G_CIRCLES.every(i => on.includes(i));
   if (!ok) { run.botFails = (run.botFails || 0) + 1; save(); guard.locked = true; $('#g-err').textContent = 'Verification failed. Press refresh ↻ and try again.'; return; }
   $('#m-guard').classList.remove('on'); nrState('ok'); $('#nr-msg').textContent = 'Verified. You are (probably) human.';
-  guard.t = setTimeout(() => ckGo('review'), 700);
+  guard.t = setTimeout(finish, 700);
 };
 // clicking outside the challenge closes it, like the real thing; the checkbox stays unticked
 $('#m-guard').addEventListener('click', e => { if (e.target.id === 'm-guard') { $('#m-guard').classList.remove('on'); $('#nr-msg').textContent = 'Challenge closed. Tick the box to try again.'; } });
 function botStart() { clearTimeout(guard.t); nrState(''); $('#nr-msg').textContent = ''; $('#m-guard').classList.remove('on'); }
 function botStop() { clearTimeout(guard.t); $('#m-guard').classList.remove('on'); }
 
-/* 2. review: our records say F21. Dispute by typing the seat backwards. */
-function makeTypo(n) {
-  const a = [...n];
-  for (let i = 1; i < a.length - 1; i++) if (/[a-z]/i.test(a[i]) && /[a-z]/i.test(a[i + 1]) && a[i].toLowerCase() !== a[i + 1].toLowerCase()) { [a[i], a[i + 1]] = [a[i + 1], a[i]]; return a.join(''); }
-  return n + 'h';
-}
-function reviewStart() {
-  const ws = run.wrongSeat || 'F21';
-  const seat = run.seatFixed ? `<s>${ws}</s>F12` : ws;
-  $('#rv-sum').innerHTML = `<div><span>Name</span><b>${esc(makeTypo(run.name || 'Guest'))}</b></div><div><span>Seat</span><b>${seat} · ${target.cat}</b></div><div><span>Show</span><span>Tue 13 Oct · ${esc(showLine())}</span></div><div><span>Age</span><span>${(run.age || 0) + 1} (rounded up)</span></div><div><span>Convenience fee</span><span>₹28.32</span></div><div><span>Emotional damage</span><span>Free</span></div><div class="tot"><span>Amount payable</span><span>₹${PRICE[target.cat] + 28}.32</span></div>`;
-  $('#rv-err').textContent = ''; $('#rv-dispute').classList.remove('on'); $('#rv-in').value = '';
-  $('#rv-wrong').style.display = run.seatFixed ? 'none' : '';
-}
-$('#rv-ok').onclick = () => {
-  if (!run.seatFixed) { $('#rv-err').textContent = `Payment declined: your request was for F12, but this booking says ${run.wrongSeat || 'F21'}. Our records are never wrong, so it must be you.`; return; }
-  ckGo('terms');
-};
-$('#rv-wrong').onclick = () => { $('#rv-dispute').classList.add('on'); $('#rv-in').focus(); };
-$('#rv-in').addEventListener('input', () => {
-  if ($('#rv-in').value.replace(/\s/g, '').toUpperCase() === '21F') { run.seatFixed = true; save(); reviewStart(); toast('Record corrected. Reluctantly.'); }
-});
-
-/* 3. terms: ten cursors, one of them is real */
-const CUR_SVG = '<svg viewBox="-1 -1 14 21"><polygon points="0,0 0,16 4,12.4 7,18.6 9.6,17.4 6.7,11.4 11.6,11.4" fill="#1A1A1A" stroke="#fff" stroke-width="1.1" stroke-linejoin="round"/></svg>';
-const TF = [
-  (x, y) => [x, y],
-  (x, y, W) => [W - x, y],
-  (x, y, W, H) => [x, H - y],
-  (x, y, W, H) => [W - x, H - y],
-  (x, y, W, H, t, s) => { s.x = s.x == null ? x : s.x + (x - s.x) * .07; s.y = s.y == null ? y : s.y + (y - s.y) * .07; return [s.x, s.y]; },
-  (x, y, W, H) => [W / 2 + (x - W / 2) * 1.45, H / 2 + (y - H / 2) * 1.45],
-  (x, y, W, H) => [W / 2 + (x - W / 2) * .6, H / 2 + (y - H / 2) * .6],
-  (x, y, W, H) => [W / 2 - (y - H / 2) * (W / H), H / 2 + (x - W / 2) * (H / W)],
-  (x, y, W, H, t) => [x + 150 * Math.sin(t / 700), y + 90 * Math.cos(t / 560)],
-  (x, y, W, H) => [y / H * W, x / W * H]
-];
-const cz = { els: [], map: [], st: [], x: -100, y: -100, raf: 0, auto: 0, in: false, checked: false, on: false };
-function shuffleCursors() { cz.map = TF.map((_, i) => i).sort(() => Math.random() - .5); cz.st = TF.map(() => ({})); }
-function curLoop(t) {
-  const W = window.innerWidth, H = window.innerHeight;
-  cz.els.forEach((el, i) => { const [x, y] = TF[cz.map[i]](cz.x, cz.y, W, H, t, cz.st[i]); el.style.transform = `translate(${x}px, ${y}px)`; el.style.opacity = cz.in ? 1 : 0; });
-  cz.raf = requestAnimationFrame(curLoop);
-}
-const curMove = e => { cz.x = e.clientX; cz.y = e.clientY; cz.in = true; };
-const curOut = e => { if (!e.relatedTarget) cz.in = false; };
-function setCheck(v) { cz.checked = v; $('#tos-check').classList.toggle('on', v); $('#tos-check .box').textContent = v ? '✓' : ''; }
-function termsStart() {
-  const layer = $('#cursors'); layer.innerHTML = CUR_SVG.repeat(10); layer.style.display = 'block';
-  cz.els = [...layer.querySelectorAll('svg')]; shuffleCursors(); setCheck(false); cz.on = true;
-  document.body.classList.add('nocur');
-  document.addEventListener('mousemove', curMove); document.addEventListener('mouseout', curOut);
-  cz.raf = requestAnimationFrame(curLoop);
-  cz.auto = setInterval(() => { shuffleCursors(); toast('Cursors reshuffled for your security.'); }, 8000);
-}
-function cursorsOff() {
-  if (!cz.on) return; cz.on = false;
-  cancelAnimationFrame(cz.raf); clearInterval(cz.auto);
-  document.removeEventListener('mousemove', curMove); document.removeEventListener('mouseout', curOut);
-  document.body.classList.remove('nocur'); $('#cursors').style.display = 'none';
-}
-$('#tos-check').onclick = () => setCheck(!cz.checked);
-$('#tos-agree').onclick = () => {
-  if (!cz.checked) { shuffleCursors(); toast('Tick the box first. Cursors reshuffled as punishment.'); return; }
-  ckGo('otp');
-};
-$('#tos-disagree').onclick = () => { setCheck(false); shuffleCursors(); toast('Disagreement noted. And ignored. Box unticked.'); };
-
-/* 4. OTP: delivered to the browser tab title, typed with Caps Lock */
+/* OTP: delivered to the browser tab title, typed with Caps Lock */
 let otp = { digits: [], taps: 0, t: 0, busy: false }, titleIv = 0;
 function otpStart() {
+  otpStop();
   if (!run.otp) { run.otp = Array.from({ length: 2 }, () => 1 + Math.floor(Math.random() * 3)).join(''); save(); }
   otp = { digits: [], taps: 0, t: 0, busy: false }; renderOtp();
   $('#otp-msg').textContent = 'Click inside this box first so it can hear your Caps Lock.';
   let flip = false;
-  clearInterval(titleIv);
   titleIv = setInterval(() => { flip = !flip; document.title = flip ? `(1) Your SeatSnatch OTP: ${run.otp.split('').join(' ')}` : BASE_TITLE; }, 1800);
   document.addEventListener('keydown', otpKey);
   if (/Mac/i.test(navigator.platform || '')) document.addEventListener('keyup', otpKey);
@@ -1032,9 +1067,9 @@ function otpStop() {
   document.removeEventListener('keydown', otpKey); document.removeEventListener('keyup', otpKey);
 }
 function renderOtp() {
-  $$('#slots .slot').forEach((s, i) => {
-    s.classList.toggle('cur', i === otp.digits.length);
-    s.innerHTML = i < otp.digits.length ? otp.digits[i] : (i === otp.digits.length && otp.taps ? `<span class="pend">${otp.taps}</span>` : '');
+  $$('#slots .slot').forEach((el, i) => {
+    el.classList.toggle('cur', i === otp.digits.length);
+    el.innerHTML = i < otp.digits.length ? otp.digits[i] : (i === otp.digits.length && otp.taps ? `<span class="pend">${otp.taps}</span>` : '');
   });
   $('#taps').innerHTML = '<i></i>'.repeat(otp.taps);
 }
@@ -1048,12 +1083,19 @@ function otpCommit() {
   otp.digits.push(otp.taps); otp.taps = 0; renderOtp();
   if (otp.digits.length < 2) { $('#otp-msg').textContent = 'Digit 1 locked.'; return; }
   if (otp.digits.join('') === run.otp) {
-    otp.busy = true; $('#otp-msg').textContent = 'Verified. Printing your ticket…';
-    setTimeout(confirmBooking, 700);
+    otp.busy = true; $('#otp-msg').textContent = 'Mobile verified.';
+    setTimeout(() => ckGo('bot'), 600);
   } else {
     otp.busy = true; $('#slots').classList.add('shake'); $('#otp-msg').textContent = 'Incorrect OTP. Check your tab again.';
     setTimeout(() => { $('#slots').classList.remove('shake'); otp.digits = []; otp.busy = false; renderOtp(); }, 900);
   }
+}
+
+/* all checks passed: brief "synchronizing" spinner, then the ticket */
+function finish() {
+  closeCheckout();
+  $('#sync').classList.add('on');
+  setTimeout(() => { $('#sync').classList.remove('on'); confirmBooking(); }, 1500);
 }
 
 /* ---------- CONFIRMATION ---------- */
@@ -1084,7 +1126,7 @@ if (run && run.seed != null) {
   if (run.done) { buildSeats(run.seed); go('done'); }
   else if (run.view === 'seats') { go('seats'); if (run.inCk) openCheckout(); toast('Welcome back. Reloading doesn\'t stop the clock.'); }
   else if (run.view === 'shows') go('shows');
-  else { go('home'); if (!run.name || !run.age || !run.vol) openSignin(); }
+  else go('home');
 } else run = null;
 })();
 </script>
