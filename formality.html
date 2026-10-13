@@ -1,0 +1,1232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formality® — Sign Up, Eventually</title>
+<!-- OTP: 9 9 9 9   (expired. obviously.) -->
+<!-- ============================================================ -->
+<!--   OTP: 4 1 3 2   ← you found it. now enter it with Caps Lock. -->
+<!-- ============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&family=Mrs+Saint+Delafield&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --orange:#F23D0C; --cream:#FFF5E1; --ink:#0C0B0A; --pink:#F6A28C;
+  --display:'Anton', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+  --body:'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --script:'Mrs Saint Delafield', 'Brush Script MT', cursive;
+  --mono:'Space Mono', ui-monospace, Consolas, monospace;
+  --speck-pink:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='f' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.065' numOctaves='5' seed='11'/><feColorMatrix values='0 0 0 0 0.965  0 0 0 0 0.62  0 0 0 0 0.54  0 0 0 -20 8.5'/></filter><rect width='100%25' height='100%25' fill='%23FFF5E1'/><rect width='100%25' height='100%25' filter='url(%23f)'/></svg>");
+  --speck-grey:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='420' height='420'><filter id='f' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'><feTurbulence type='fractalNoise' baseFrequency='0.065' numOctaves='5' seed='4'/><feColorMatrix values='0 0 0 0 0.72  0 0 0 0 0.68  0 0 0 0 0.62  0 0 0 -20 8.3'/></filter><rect width='100%25' height='100%25' fill='%23FFF5E1'/><rect width='100%25' height='100%25' filter='url(%23f)'/></svg>");
+  --grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.4 -0.35'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>");
+}
+body[data-theme="orange"]{--bg:var(--orange);--fg:var(--cream);--accent:var(--ink);--muted:rgba(255,245,225,.78);--line:rgba(255,245,225,.42);--speck:var(--speck-pink)}
+body[data-theme="black"] {--bg:var(--ink);--fg:var(--cream);--accent:var(--orange);--muted:rgba(255,245,225,.6);--line:rgba(255,245,225,.2);--speck:var(--speck-grey)}
+body[data-theme="cream"] {--bg:var(--cream);--fg:var(--ink);--accent:var(--orange);--muted:rgba(12,11,10,.62);--line:rgba(12,11,10,.2);--speck:none}
+
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body::after{content:"";position:fixed;inset:0;background-image:var(--grain);opacity:.09;pointer-events:none;z-index:300}
+::selection{background:var(--accent);color:var(--cream)}
+button{font:inherit;color:inherit}
+code{font-family:var(--mono);font-size:.92em;background:rgba(127,127,127,.18);padding:.05em .35em}
+
+/* ---------- HUD ---------- */
+.hud{position:fixed;top:0;left:0;right:0;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;padding:22px 40px 18px;z-index:50;pointer-events:none;background:linear-gradient(var(--bg) 55%,transparent)}
+.hud .brand{font:700 13px/1.08 var(--body);letter-spacing:.02em;text-transform:uppercase}
+.hud .mid{font:400 26px/1 var(--display);letter-spacing:.02em}
+.hud .clock{justify-self:end;text-align:right}
+.hud .clock small{display:block;font:600 10px var(--body);letter-spacing:.22em;opacity:.75;margin-bottom:4px}
+.hud .clock b{font:700 20px/1 var(--mono);letter-spacing:.02em}
+
+.foot{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:24px;padding:16px 40px 20px;z-index:50;font:600 11px var(--body);letter-spacing:.2em;text-transform:uppercase;pointer-events:none;background:linear-gradient(transparent,var(--bg) 45%)}
+.foot .bar{flex:1;height:3px;background:var(--line);position:relative;max-width:520px}
+.foot .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--fg);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.foot .eta{margin-left:auto}
+body[data-step="intro"] .foot, body[data-step="done"] .foot{display:none}
+
+/* ---------- steps ---------- */
+.step{display:none;position:relative;min-height:100vh;padding:104px 56px 84px}
+.step.active{display:grid;grid-template-columns:minmax(0,1.05fr) 10px minmax(0,1fr);gap:56px;align-items:center;animation:in .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.rule{align-self:stretch;background:var(--accent);margin:-104px 0 -84px}
+.copy{position:relative;min-width:0}
+.kicker{font:600 12px var(--body);letter-spacing:.24em;text-transform:uppercase;display:flex;gap:14px;align-items:center;color:var(--muted)}
+.kicker span{font:400 15px var(--display);letter-spacing:.06em;color:var(--fg)}
+.mega{position:relative;font:400 clamp(84px,12.5vw,230px)/.82 var(--display);text-transform:uppercase;margin:.12em 0 0;letter-spacing:-.005em;white-space:nowrap}
+.tex{background-image:var(--speck);background-size:420px;-webkit-background-clip:text;background-clip:text;color:transparent}
+body[data-theme="cream"] .tex{color:var(--fg);background:none}
+.scr{position:absolute;left:.38em;bottom:-.16em;font:400 .6em/1 var(--script);text-transform:none;letter-spacing:0;color:var(--accent);-webkit-text-fill-color:var(--accent);transform:rotate(-7deg);white-space:nowrap;pointer-events:none;background:none}
+.squig{display:block;width:min(420px,70%);height:auto;margin:14px 0 0 -4px;overflow:visible}
+.squig path{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:round}
+.lede{max-width:38ch;font:500 17px/1.4 var(--body);margin:22px 0 0}
+.lede b{font-weight:700}
+
+.stage{min-width:0;display:flex;flex-direction:column;gap:22px;position:relative}
+.label{font:600 11px/1 var(--body);letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.big{font:400 clamp(96px,15vw,250px)/.84 var(--display);letter-spacing:-.01em}
+.note{font:500 15px/1.4 var(--body);color:var(--muted);min-height:1.4em;margin:0}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+
+.btn{display:inline-flex;align-items:center;gap:14px;background:var(--fg);color:var(--bg);border:0;padding:17px 26px 15px;font:400 21px/1 var(--display);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s,transform .2s}
+.btn:hover:not(:disabled){background:var(--accent);color:var(--cream)}
+.btn:active:not(:disabled){transform:translateY(1px)}
+.btn:disabled{opacity:.3;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--fg);box-shadow:inset 0 0 0 2px var(--fg)}
+.btn .arr{transition:transform .2s}
+.btn:hover:not(:disabled) .arr{transform:translateX(4px)}
+.linkish{background:none;border:0;padding:0;font:600 13px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:4px}
+
+/* ---------- intro ---------- */
+.step.intro.active{display:block;overflow:hidden;padding:0}
+.hero{position:absolute;left:50%;top:47%;transform:translate(-50%,-50%);margin:0;font:400 clamp(150px,31vw,600px)/.8 var(--display);white-space:nowrap;letter-spacing:-.005em}
+.hero-script{position:absolute;left:50%;top:47%;transform:translate(-40%,-30%) rotate(-9deg);font:400 clamp(90px,15vw,280px)/1 var(--script);color:var(--ink);white-space:nowrap;pointer-events:none}
+.vlabel{position:absolute;font:600 11px var(--body);letter-spacing:.24em;text-transform:uppercase;writing-mode:vertical-rl;transform:rotate(180deg);color:var(--ink)}
+.hero-foot{position:absolute;left:56px;bottom:52px;display:flex;flex-direction:column;gap:20px;align-items:flex-start;z-index:2}
+.hero-foot p{margin:0;max-width:34ch;font:600 16px/1.25 var(--body)}
+.hero-cursor{position:absolute;right:5vw;bottom:-7vh;height:min(58vh,520px);transform:rotate(-16deg);filter:drop-shadow(10px 14px 0 rgba(12,11,10,.18));pointer-events:none}
+.btn.ink{background:var(--ink);color:var(--cream)}
+.btn.ink:hover{background:var(--cream);color:var(--ink)}
+
+/* ---------- 01 name ---------- */
+.addr{display:flex;align-items:center;gap:12px;background:#1a1917;border:1px solid var(--line);border-radius:999px;padding:13px 20px;font:13px var(--mono);color:var(--muted);overflow:hidden;white-space:nowrap;max-width:100%}
+.addr .dots{display:flex;gap:6px;flex:none}.addr .dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.addr .url{overflow:hidden;white-space:nowrap;min-width:0}
+.addr .hashpart{color:var(--orange);flex:none}
+.addr .caret{width:2px;height:16px;background:var(--orange);animation:blink 1s steps(1) infinite;flex:none}
+@keyframes blink{50%{opacity:0}}
+.uparrow{font:400 44px/1 var(--script);color:var(--accent);transform:rotate(-6deg);margin:-6px 0 0 30px}
+.nameout{font:400 clamp(56px,7vw,120px)/.9 var(--display);text-transform:uppercase;word-break:break-word;min-height:.9em}
+.nameout.empty{color:var(--line)}
+
+/* ---------- 03 volume ---------- */
+.vol{position:relative;height:56px;margin-top:6px}
+.vol .track{position:absolute;left:0;right:0;top:26px;height:4px;background:var(--line)}
+.vol .fill{position:absolute;left:0;top:26px;height:4px;background:var(--fg);transition:width .3s}
+.vol .knob{position:absolute;top:12px;width:32px;height:32px;margin-left:-16px;border-radius:50%;background:var(--accent);transition:left .3s;box-shadow:0 0 0 6px var(--bg)}
+.vol .tgt{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--accent)}
+.vol .tgt::after{content:attr(data-l);position:absolute;top:-22px;left:50%;transform:translateX(-50%);font:600 11px var(--body);letter-spacing:.2em;color:var(--accent)}
+.vol input{position:absolute;inset:0;width:100%;opacity:0;cursor:ew-resize;margin:0}
+.ticks{display:flex;justify-content:space-between;font:11px var(--mono);color:var(--muted)}
+
+/* ---------- 04 phone ---------- */
+.lcd{font:400 clamp(44px,5.4vw,78px)/1 var(--display);letter-spacing:.06em;white-space:nowrap}
+.lcd .ph{color:var(--line)}
+.lcd .bad{color:var(--orange);text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:380px;width:100%}
+.pkey{height:64px;display:grid;place-items:center;font:400 30px var(--display);border:1.5px solid var(--line);user-select:none;transition:background .15s,color .15s,border-color .15s}
+.pkey.hit{background:var(--accent);color:var(--cream);border-color:var(--accent)}
+.pkey.ok{background:var(--fg);color:var(--bg);font-size:20px;letter-spacing:.08em}
+body[data-step="phone"]{cursor:crosshair}
+#dog{position:fixed;left:0;top:0;width:76px;height:52px;pointer-events:none;z-index:60;display:none}
+#dog svg{width:100%;height:100%;transition:transform .15s}
+#dog .woof{position:absolute;left:52px;top:-26px;font:400 34px/1 var(--script);color:var(--orange);opacity:0;white-space:nowrap}
+#dog .woof.on{animation:woof .7s ease-out}
+@keyframes woof{0%{opacity:0;transform:translateY(6px)}20%{opacity:1}100%{opacity:0;transform:translateY(-14px)}}
+#leash{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:59;display:none}
+#leash path{fill:none;stroke:var(--orange);stroke-width:2.5;stroke-linecap:round}
+#squirrel{position:fixed;left:0;top:0;width:46px;height:46px;pointer-events:none;z-index:58;display:none}
+
+/* ---------- 05 robot ---------- */
+.botgrid{display:grid;grid-template-columns:repeat(25,1fr);gap:3px;max-width:500px;width:100%}
+.botgrid input{-webkit-appearance:none;appearance:none;margin:0;width:100%;aspect-ratio:1;border:1.5px solid rgba(255,245,225,.65);background:transparent;cursor:pointer;transition:background .1s}
+.botgrid input:checked{background:var(--cream);border-color:var(--cream)}
+.drain{height:5px;background:rgba(255,245,225,.25);max-width:500px;width:100%}
+.drain i{display:block;height:100%;width:0;background:var(--ink)}
+.verdict{font:400 clamp(40px,4.6vw,68px)/.95 var(--display);text-transform:uppercase}
+.hint{border-left:3px solid var(--ink);padding:4px 0 4px 14px;font:500 14px/1.45 var(--body);display:none}
+.hint.on{display:block}
+
+/* ---------- 06 otp ---------- */
+.slots{display:flex;gap:12px}
+.slot{width:clamp(66px,7.4vw,104px);aspect-ratio:.78;border:2px solid var(--line);display:grid;place-items:center;font:400 clamp(52px,6vw,88px)/1 var(--display);transition:border-color .2s}
+.slot.cur{border-color:var(--orange)}
+.slot .pend{color:var(--orange)}
+.slots.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-10px)}40%,80%{transform:translateX(10px)}}
+.tapline{display:flex;align-items:center;gap:16px;min-height:48px}
+.taps{display:flex;gap:7px}
+.taps i{width:14px;height:14px;border-radius:50%;background:var(--orange)}
+.ring{width:44px;height:44px;transform:rotate(-90deg);opacity:0}
+.ring circle{fill:none;stroke-width:4}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:var(--orange);stroke-dasharray:113.1;stroke-dashoffset:0}
+.ring.run{opacity:1}
+.ring.run .fg{animation:ring 1.4s linear forwards}
+@keyframes ring{to{stroke-dashoffset:113.1}}
+.key-cap{display:inline-block;border:1.5px solid currentColor;border-radius:6px;padding:2px 9px 1px;font:700 12px var(--body);letter-spacing:.12em;vertical-align:2px}
+
+/* ---------- 07 shout ---------- */
+.meter{display:flex;gap:5px;height:120px;align-items:flex-end;max-width:520px;width:100%}
+.meter i{flex:1;background:rgba(255,245,225,.22);transition:background .08s}
+.meter i.on{background:var(--cream)}
+.meter i.hot{background:var(--ink)}
+.shoutword{font:400 clamp(60px,8vw,128px)/.9 var(--display);text-transform:uppercase;transform-origin:left center;transition:transform .08s}
+.prog{height:14px;background:rgba(255,245,225,.25);max-width:520px;width:100%;position:relative}
+.prog i{position:absolute;left:0;top:0;bottom:0;background:var(--ink);width:0}
+
+/* ---------- 08 terms ---------- */
+.tos{max-height:190px;overflow:auto;border:1.5px solid var(--line);padding:16px 20px;font:400 14px/1.55 var(--body);background:rgba(12,11,10,.025)}
+.tos p{margin:0 0 10px}
+.check{display:inline-flex;gap:14px;align-items:center;font:700 15px var(--body);user-select:none;cursor:pointer}
+.check .box{width:28px;height:28px;border:2px solid var(--fg);display:grid;place-items:center;font:400 20px var(--display);color:var(--cream)}
+.check.on .box{background:var(--orange);border-color:var(--orange)}
+body[data-step="terms"] .btn:hover:not(:disabled){background:var(--fg);color:var(--bg)}
+body[data-step="terms"] .btn.ghost:hover{background:transparent;color:var(--fg)}
+body.nocur, body.nocur *{cursor:none !important}
+#cursors{position:fixed;inset:0;pointer-events:none;z-index:280;display:none}
+#cursors svg{position:absolute;left:0;top:0;width:22px;height:34px;will-change:transform}
+
+/* ---------- 09 stamp ---------- */
+.stamp-stage{flex-direction:row;align-items:center;gap:34px}
+.stamp-side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.target{flex:none;width:clamp(170px,17vw,230px);aspect-ratio:1;border-radius:50%;border:2px dashed var(--line);display:grid;place-items:center;text-align:center;position:relative;font:600 11px/1.6 var(--body);letter-spacing:.24em;color:var(--muted)}
+.target::before{content:"";position:absolute;inset:-14px;border-radius:50%;border:1.5px solid var(--orange);opacity:.0;animation:pulse 2.2s ease-out infinite}
+@keyframes pulse{0%{transform:scale(.92);opacity:.7}100%{transform:scale(1.15);opacity:0}}
+.target .mark{position:absolute;inset:18px;border-radius:50%;background:var(--orange);display:none;place-items:center;color:var(--cream);transform:rotate(-12deg);box-shadow:inset 0 0 0 8px var(--orange),inset 0 0 0 11px var(--cream)}
+.target .mark b{display:block;font:400 40px/1 var(--display);letter-spacing:.02em}
+.target .mark small{font:600 9px var(--body);letter-spacing:.26em}
+.target.stamped{border-color:transparent}
+.target.stamped::before{display:none}
+.target.stamped .mark{display:grid;animation:thump .45s cubic-bezier(.3,1.6,.5,1)}
+.target.stamped .lbl{display:none}
+@keyframes thump{from{transform:rotate(-12deg) scale(2.2);opacity:0}to{transform:rotate(-12deg) scale(1);opacity:1}}
+.dist{font:400 clamp(56px,6.6vw,104px)/.9 var(--display)}
+.temp{font:400 46px/1 var(--script);color:var(--orange)}
+
+/* ---------- 10 review ---------- */
+.rec{width:100%;border-collapse:collapse}
+.rec td{padding:11px 0;border-bottom:1.5px solid var(--line);vertical-align:baseline}
+.rec td:first-child{font:600 11px var(--body);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);width:34%}
+.rec td:last-child{font:400 28px/1.05 var(--display);text-transform:uppercase}
+.rec s{color:var(--muted);text-decoration-color:var(--orange);text-decoration-thickness:3px;margin-right:10px}
+.rec em{font:500 12px var(--body);font-style:normal;text-transform:none;color:var(--muted);margin-left:8px;letter-spacing:.02em}
+.field{font:400 30px var(--display);background:transparent;border:0;border-bottom:2px solid var(--fg);color:var(--fg);padding:6px 0;width:100%;outline:none;letter-spacing:.03em;text-transform:uppercase;border-radius:0}
+.field::placeholder{color:var(--line)}
+.err{color:var(--orange);font:600 14px/1.4 var(--body);min-height:1.4em;margin:0}
+.dispute{display:none;border-left:3px solid var(--orange);padding-left:16px;gap:10px;flex-direction:column}
+.dispute.on{display:flex}
+
+/* ---------- 11 print ---------- */
+.code-in{font-size:clamp(40px,4.4vw,64px);letter-spacing:.3em}
+#receipt{display:none}
+@media print{
+  @page{margin:14mm}
+  body{background:#fff !important}
+  body::after{display:none}
+  body > *:not(#receipt){display:none !important}
+  #receipt{display:block;color:#000;font-family:var(--body);text-align:center;padding-top:30mm}
+  #receipt .r-brand{font:400 44px/1 var(--display);letter-spacing:.02em}
+  #receipt .r-sub{font:600 11px var(--body);letter-spacing:.3em;text-transform:uppercase;margin-top:8px}
+  #receipt hr{border:0;border-top:2px dashed #000;margin:14mm 0}
+  #receipt .r-k{font:600 12px var(--body);letter-spacing:.3em;text-transform:uppercase}
+  #receipt .r-code{font:400 120px/1 var(--display);letter-spacing:.12em;margin:6mm 0}
+  #receipt .r-fine{font:500 12px/1.6 var(--body);max-width:120mm;margin:0 auto}
+}
+/* ---------- done ---------- */
+.step.done.active{display:block;padding:120px 56px 70px}
+.done .mega{font-size:clamp(100px,17.5vw,330px);margin:0}
+.done .scr{left:auto;right:.2em;bottom:-.24em;font-size:.48em;color:var(--ink);-webkit-text-fill-color:var(--ink)}
+.done .welcome{font:600 18px/1.35 var(--body);max-width:44ch;margin:48px 0 0}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:34px;border-top:2px solid var(--ink);max-width:1100px}
+.stat{padding:16px 18px 18px 0;border-bottom:1.5px solid rgba(12,11,10,.25)}
+.stat .k{font:600 11px var(--body);letter-spacing:.22em;text-transform:uppercase;color:var(--ink)}
+.stat .v{font:400 52px/1 var(--display);margin-top:8px}
+
+#expired{position:fixed;inset:0;background:var(--ink);color:var(--orange);z-index:250;display:none;place-items:center;text-align:center}
+#expired.on{display:grid}
+#expired h3{margin:0;font:400 clamp(90px,16vw,280px)/.82 var(--display);text-transform:uppercase}
+#expired p{font:700 16px var(--mono);color:var(--cream);letter-spacing:.06em;margin:26px 0 0}
+#expired .kid{font:400 clamp(70px,10vw,170px)/1 var(--script);color:var(--cream)}
+
+/* ---------- toast ---------- */
+#toast{position:fixed;left:50%;bottom:64px;transform:translate(-50%,20px);background:var(--ink);color:var(--cream);padding:14px 20px 14px 18px;border-left:5px solid var(--orange);font:600 14px/1.35 var(--body);z-index:260;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;max-width:min(560px,90vw);box-shadow:0 12px 30px rgba(0,0,0,.25)}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+body[data-theme="black"] #toast{background:var(--cream);color:var(--ink)}
+
+@media (max-width:1100px){
+  .step{padding:96px 28px 80px}
+  .step.active{gap:30px}
+  .mega{font-size:clamp(70px,11vw,150px)}
+  .lede{font-size:15px}
+  .big{font-size:clamp(90px,13vw,200px)}
+}
+@media (max-width:720px){
+  .step{padding:96px 24px 84px}
+  .step.active{grid-template-columns:1fr;gap:34px;align-content:start}
+  .rule{display:none}
+  .hud{padding:18px 24px 14px}.foot{padding:14px 24px 18px}
+  .hud .mid{font-size:20px}
+  .mega{font-size:clamp(76px,19vw,170px)}
+  .hero-foot{left:24px;bottom:36px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #s-age.active{grid-template-columns:1fr 1fr;gap:20px;align-content:center}
+  #s-age .mega{font-size:clamp(56px,11vw,90px)}
+  .stamp-stage{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+</head>
+<body data-theme="orange" data-step="intro">
+
+<header class="hud">
+  <div class="brand">CSI — VIT<br>Chaos by Design</div>
+  <div class="mid">FORMALITY®</div>
+  <div class="clock"><small>Time suffered</small><b id="clock">00:00:00</b></div>
+</header>
+
+<!-- ================= INTRO ================= -->
+<section class="step intro" id="s-intro" data-theme="orange">
+  <span class="vlabel" style="left:28px;top:30%">Formality</span>
+  <span class="vlabel" style="right:28px;top:30%">Est. 2026</span>
+  <h1 class="hero tex">SIGN UP</h1>
+  <div class="hero-script">eventually</div>
+  <div class="hero-foot">
+    <p>A perfectly functional registration form. Eleven steps. No shortcuts. It works — it just doesn't want to.</p>
+    <button class="btn ink" id="begin">Begin registration <span class="arr">→</span></button>
+  </div>
+  <svg class="hero-cursor" viewBox="-1 -1 14 21" aria-hidden="true"><polygon points="0,0 0,16 4,12.4 7,18.6 9.6,17.4 6.7,11.4 11.6,11.4" fill="#0C0B0A" stroke="#FFF5E1" stroke-width=".55" stroke-linejoin="round"/></svg>
+</section>
+
+<!-- ================= 01 NAME ================= -->
+<section class="step" id="s-name" data-theme="black">
+  <div class="copy">
+    <div class="kicker"><span>01</span>Identity</div>
+    <h2 class="mega tex">Name<span class="scr">not here</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede">For security reasons this page has no text field. Your name lives in the <b>address bar</b>. Click it, jump to the very end, type <code>#</code> followed by your name, and press <b>Enter</b>.</p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage">
+    <div class="addr"><span class="dots"><i></i><i></i><i></i></span><span class="url" id="addr-url">index.html</span><span class="hashpart" id="addr-hash">#</span><span class="caret"></span></div>
+    <div class="uparrow">↑ up there, not here</div>
+    <div class="label">We heard</div>
+    <div class="nameout empty" id="name-out">—</div>
+    <p class="note" id="name-note">Waiting for the address bar…</p>
+    <div class="row"><button class="btn" id="name-ok" disabled>That's me <span class="arr">→</span></button></div>
+  </div>
+</section>
+
+<!-- ================= 02 AGE ================= -->
+<section class="step" id="s-age" data-theme="orange">
+  <div class="copy">
+    <div class="kicker"><span>02</span>Date of birth, roughly</div>
+    <h2 class="mega tex">Age<span class="scr">stretch it</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede">Your age is the <b>width of this window divided by forty</b>. Resize the browser until it's right. This event is for students, so it has to be <b>30 or under</b>. Yes, you'll need to un-maximise.</p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage">
+    <div class="label">Current age</div>
+    <div class="big" id="age-out">00</div>
+    <div class="label" id="age-math" style="letter-spacing:.12em">— px ÷ 40</div>
+    <p class="note" id="age-note"></p>
+    <div class="row"><button class="btn" id="age-ok" disabled>Lock age <span class="arr">→</span></button></div>
+  </div>
+</section>
+
+<!-- ================= 03 VOLUME ================= -->
+<section class="step" id="s-volume" data-theme="cream">
+  <div class="copy">
+    <div class="kicker"><span>03</span>Notification preferences</div>
+    <h2 class="mega">Volume<span class="scr">use zoom</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede" id="vol-lede">Set your notification volume to exactly <b>67</b>. The volume control is your browser zoom: <span class="key-cap">CTRL</span> + <span class="key-cap">−</span> / <span class="key-cap">+</span>.</p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage">
+    <div class="label">Volume</div>
+    <div class="big" id="vol-out">100</div>
+    <div class="vol" id="vol">
+      <div class="track"></div><div class="fill" id="vol-fill"></div>
+      <div class="tgt" id="vol-tgt" data-l="TARGET"></div>
+      <div class="knob" id="vol-knob"></div>
+      <input type="range" min="25" max="200" value="100" id="vol-range" aria-label="Volume (decorative)">
+    </div>
+    <div class="ticks"><span>25</span><span>100</span><span>200</span></div>
+    <p class="note" id="vol-note">Target: 67.</p>
+    <div class="row"><button class="btn" id="vol-ok" disabled>Save volume <span class="arr">→</span></button></div>
+  </div>
+</section>
+
+<!-- ================= 04 PHONE ================= -->
+<section class="step" id="s-phone" data-theme="black">
+  <div class="copy">
+    <div class="kicker"><span>04</span>Contact number</div>
+    <h2 class="mega tex">Phone<span class="scr">good boy</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede" id="phone-lede">Just type your phone number. That's it. A completely normal field. <b>We promise.</b></p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage" id="phone-ask">
+    <div class="label">Mobile number · +91</div>
+    <input class="field" id="phone-in" inputmode="numeric" maxlength="12" placeholder="98765 43210" autocomplete="off">
+    <p class="err" id="phone-err"></p>
+    <div class="row"><button class="btn" id="phone-next">Next <span class="arr">→</span></button></div>
+  </div>
+  <div class="stage" id="phone-stage" style="display:none">
+    <div class="label">Confirm <b id="phone-target" style="color:var(--cream);letter-spacing:.12em"></b></div>
+    <div class="lcd" id="phone-out"></div>
+    <div class="pad" id="phone-pad"></div>
+    <p class="note" id="phone-note">Must match exactly. Good luck to you both.</p>
+  </div>
+</section>
+
+<!-- ================= 05 ROBOT ================= -->
+<section class="step" id="s-robot" data-theme="orange">
+  <div class="copy">
+    <div class="kicker"><span>05</span>Security check</div>
+    <h2 class="mega tex">Robot?<span class="scr">prove it</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede">This service is for <b>robots only</b>. To verify you are a robot, tick all <b>300 boxes</b> within <b>one second</b>. Humans will be reset.</p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage">
+    <div class="row" style="justify-content:space-between;max-width:500px"><span class="label">Ticked <b id="bot-count" style="color:var(--cream)">0</b> / 300</span><span class="label">Attempts <b id="bot-att" style="color:var(--cream)">0</b></span></div>
+    <div class="botgrid" id="botgrid"></div>
+    <div class="drain"><i id="bot-drain"></i></div>
+    <div class="verdict" id="bot-verdict">Awaiting machine.</div>
+    <div class="hint" id="bot-hint"></div>
+    <div class="row"><button class="btn" id="bot-ok" style="display:none">Beep boop, continue <span class="arr">→</span></button><button class="btn ink" id="bot-reset" style="display:none">Reset <span class="arr">↺</span></button></div>
+  </div>
+</section>
+
+<!-- ================= 06 OTP ================= -->
+<section class="step" id="s-otp" data-theme="black">
+  <div class="copy">
+    <div class="kicker"><span>06</span>Verification</div>
+    <h2 class="mega tex">OTP<span class="scr">check the source</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede">We've sent a one-time password to… <b>the page source</b> (<span class="key-cap">CTRL</span> + <span class="key-cap">U</span>). To type it, tap <span class="key-cap">CAPS LOCK</span> once per number, then wait. The digit locks in by itself.</p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage">
+    <div class="label">Enter OTP</div>
+    <div class="slots" id="otp-slots"><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div></div>
+    <div class="tapline">
+      <svg class="ring" id="otp-ring" viewBox="0 0 44 44"><circle class="bg" cx="22" cy="22" r="18"/><circle class="fg" cx="22" cy="22" r="18"/></svg>
+      <div class="taps" id="otp-taps"></div>
+    </div>
+    <p class="note" id="otp-note">Click this page first, so it can hear your Caps Lock.</p>
+  </div>
+</section>
+
+<!-- ================= 07 SHOUT ================= -->
+<section class="step" id="s-shout" data-theme="orange">
+  <div class="copy">
+    <div class="kicker"><span>07</span>Enthusiasm check</div>
+    <h2 class="mega tex">Louder<span class="scr">with feeling</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede">Say <b>“I LOVE FILLING FORMS”</b> loudly enough for the whole of M314 to hear. Keep going until the bar is full. We'll know if you mean it.</p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage">
+    <div class="shoutword" id="shout-word">Silence.</div>
+    <div class="meter" id="meter"></div>
+    <div class="label">Sincerity</div>
+    <div class="prog"><i id="shout-prog"></i></div>
+    <p class="note" id="shout-note">We need your microphone. For science.</p>
+    <div class="row">
+      <button class="btn" id="shout-mic">Start microphone <span class="arr">→</span></button>
+      <button class="linkish" id="shout-alt" style="display:none">No mic? Mash space instead</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 08 TERMS ================= -->
+<section class="step" id="s-terms" data-theme="cream">
+  <div class="copy">
+    <div class="kicker"><span>08</span>Legal</div>
+    <h2 class="mega">Terms<span class="scr">which one is you?</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede">Tick the box and press Agree. Simple. Except we've given you <b>ten cursors</b>, and only one of them is real.</p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage">
+    <div class="tos">
+      <p><b>1.</b> By reading this, you agree that you have read it.</p>
+      <p><b>2.</b> Formality® may contact you by carrier pigeon, fax, or interpretive dance.</p>
+      <p><b>3.</b> Your data is stored securely in a Google Sheet called <i>final_FINAL_v3 (1)</i>.</p>
+      <p><b>4.</b> The dog is not liable for squirrels.</p>
+      <p><b>5.</b> You waive all rights to good UX, now and in perpetuity, throughout the known universe.</p>
+      <p><b>6.</b> Clause 6 intentionally left blank. Like your patience.</p>
+    </div>
+    <div class="check" id="tos-check"><span class="box"></span>I have read and agree to everything</div>
+    <div class="row">
+      <button class="btn" id="tos-agree">Agree <span class="arr">→</span></button>
+      <button class="btn ghost" id="tos-disagree">Disagree</button>
+    </div>
+    <p class="note" id="tos-note">Reshuffles: 0</p>
+  </div>
+</section>
+
+<!-- ================= 09 STAMP ================= -->
+<section class="step" id="s-stamp" data-theme="black">
+  <div class="copy">
+    <div class="kicker"><span>09</span>Authorisation</div>
+    <h2 class="mega tex">Stamp<span class="scr">drag it over</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede">Official forms need an official stamp. Ours lives in <b>a separate window</b>. Drag that whole window until the stamp sits on the circle, then hold still.</p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage stamp-stage">
+    <div class="target" id="stamp-target"><span class="lbl">PLACE<br>STAMP<br>HERE</span><div class="mark"><div><b>APPROVED</b><small>FORMALITY® · M314</small></div></div></div>
+    <div class="stamp-side">
+      <div class="label">Distance</div>
+      <div class="dist" id="stamp-dist">—</div>
+      <div class="temp" id="stamp-temp">&nbsp;</div>
+      <p class="note" id="stamp-note">Allow pop-ups if your browser asks.</p>
+      <div class="row">
+        <button class="btn" id="stamp-open">Get stamp <span class="arr">↗</span></button>
+        <button class="btn" id="stamp-ok" style="display:none">Continue <span class="arr">→</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 10 REVIEW ================= -->
+<section class="step" id="s-review" data-theme="cream">
+  <div class="copy">
+    <div class="kicker"><span>10</span>Review</div>
+    <h2 class="mega">Review<span class="scr">we're never wrong</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede">Please confirm your details. They have been carefully checked by our dog. Sign below by typing your name <b>exactly as it appears on record</b>.</p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage">
+    <table class="rec"><tbody>
+      <tr><td>Name</td><td id="r-name"></td></tr>
+      <tr><td>Age</td><td id="r-age"></td></tr>
+      <tr><td>Phone</td><td id="r-phone"></td></tr>
+      <tr><td>Volume</td><td>67 <em>as requested</em></td></tr>
+      <tr><td>Species</td><td>Robot <em>verified</em></td></tr>
+    </tbody></table>
+    <input class="field" id="sign" placeholder="Sign here" autocomplete="off" spellcheck="false">
+    <p class="err" id="sign-err"></p>
+    <div class="dispute" id="dispute">
+      <div class="label">Dispute a record</div>
+      <p class="note" style="margin:0">To prove you are you, type your real name <b>backwards</b>. Imposters can't do this. Probably.</p>
+      <input class="field" id="dispute-in" placeholder="emaN" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="row"><button class="btn" id="sign-ok">Sign &amp; continue <span class="arr">→</span></button><button class="linkish" id="dispute-open" style="display:none">This is wrong</button></div>
+  </div>
+</section>
+
+<!-- ================= 11 SUBMIT / PRINT ================= -->
+<section class="step" id="s-submit" data-theme="black">
+  <div class="copy">
+    <div class="kicker"><span>11</span>Submission</div>
+    <h2 class="mega tex">Submit<span class="scr">on paper</span></h2>
+    <svg class="squig" viewBox="0 0 520 50"><path d="M2 36 C 70 4, 110 62, 180 30 S 290 0, 350 30 S 460 52, 518 12"/></svg>
+    <p class="lede">Digital submissions are not accepted. Please <b>print this page</b> (<span class="key-cap">CTRL</span> + <span class="key-cap">P</span>). Your submission code appears on the printout. The preview counts. Trees thank you.</p>
+  </div>
+  <div class="rule"></div>
+  <div class="stage">
+    <div class="label">Submission code</div>
+    <input class="field code-in" id="code-in" maxlength="6" placeholder="······" autocomplete="off" spellcheck="false">
+    <p class="err" id="code-err"></p>
+    <p class="note" id="code-note">No code on screen. Obviously.</p>
+    <div class="row"><button class="btn" id="code-ok">Submit <span class="arr">→</span></button></div>
+  </div>
+</section>
+
+<!-- ================= DONE ================= -->
+<section class="step done" id="s-done" data-theme="orange">
+  <div class="kicker" style="color:var(--ink)"><span style="color:var(--ink)">✓</span>Registration complete</div>
+  <h2 class="mega tex">Registered<span class="scr">eventually</span></h2>
+  <p class="welcome" id="done-welcome"></p>
+  <div class="stats" id="stats"></div>
+  <div class="row" style="margin-top:34px"><button class="btn ink" id="again">Suffer again <span class="arr">↺</span></button></div>
+</section>
+
+<div class="foot"><span id="f-step">STEP 01 / 11</span><span class="bar"><i id="f-bar" style="width:0"></i></span><span class="eta" id="f-eta">ETA 3 MIN</span></div>
+
+<div id="dog"><svg viewBox="0 0 76 52"><g fill="#FFF5E1"><rect x="14" y="20" width="36" height="16" rx="8"/><circle cx="54" cy="16" r="10"/><rect x="58" y="15" width="13" height="8" rx="4"/><path d="M47 9 L50 0 L56 8 Z"/><rect x="17" y="32" width="5" height="16" rx="2"/><rect x="25" y="32" width="5" height="14" rx="2"/><rect x="39" y="32" width="5" height="16" rx="2"/><rect x="46" y="32" width="5" height="14" rx="2"/><path d="M16 24 Q6 20 4 8" stroke="#FFF5E1" stroke-width="4" fill="none" stroke-linecap="round"/></g><rect x="46" y="22" width="12" height="4" rx="2" fill="#F23D0C"/><circle cx="57" cy="13" r="1.8" fill="#0C0B0A"/><circle cx="70" cy="18" r="2" fill="#0C0B0A"/></svg><span class="woof" id="woof">woof</span></div>
+<svg id="leash"><path id="leash-path" d=""/></svg>
+<svg id="squirrel" viewBox="0 0 46 46"><path d="M14 40 C 0 34, 0 10, 14 6 C 24 3, 26 16, 18 20 C 14 22, 18 30, 22 32 Z" fill="#F23D0C"/><ellipse cx="28" cy="32" rx="9" ry="10" fill="#F23D0C"/><circle cx="34" cy="20" r="6" fill="#F23D0C"/><path d="M33 14 L35 9 L37 15 Z" fill="#F23D0C"/><circle cx="36" cy="19" r="1.2" fill="#0C0B0A"/></svg>
+<div id="cursors"></div>
+<div id="expired"><div><h3 id="exp-h">Session<br>expired</h3><p id="exp-p">Restarting from step 01 in 5…</p></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="receipt"><div class="r-brand">FORMALITY®</div><div class="r-sub">Official paper receipt</div><hr><div class="r-k">Submission code</div><div class="r-code" id="r-code">——</div><div class="r-fine">This code is valid for this printout only. Printing again generates a new code.<br>Please do not fold, spindle, or feel things about this receipt.</div></div>
+
+<script>
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const wait = ms => new Promise(r => setTimeout(r, ms));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const pad2 = n => String(n).padStart(2, '0');
+
+const S = { name: '', typo: '', finalName: '', age: 0, phone: '', t0: 0, t1: 0,
+  stats: { bot: 0, squirrels: 0, shuffles: 0, caps: 0, prints: 0, otpFails: 0 } };
+
+const ORDER = ['intro','name','age','volume','phone','robot','otp','shout','terms','stamp','review','submit','done'];
+const hooks = {};
+let cur = -1;
+
+function goTo(i) {
+  if (cur >= 0 && hooks[ORDER[cur]] && hooks[ORDER[cur]].exit) hooks[ORDER[cur]].exit();
+  cur = i;
+  save();
+  $$('.step').forEach(s => s.classList.remove('active'));
+  const sec = $('#s-' + ORDER[i]);
+  sec.classList.add('active');
+  document.body.dataset.theme = sec.dataset.theme;
+  document.body.dataset.step = ORDER[i];
+  window.scrollTo(0, 0);
+  updateFoot();
+  if (hooks[ORDER[i]] && hooks[ORDER[i]].enter) hooks[ORDER[i]].enter();
+}
+const next = () => goTo(cur + 1);
+
+// Progress survives reloads: the step, answers, stats and the clock all persist.
+const KEY = 'formality-run-v1';
+function save() { try { localStorage.setItem(KEY, JSON.stringify({ cur, S })); } catch (e) {} }
+function forget() { try { localStorage.removeItem(KEY); } catch (e) {} }
+setInterval(() => { if (cur >= 0) save(); }, 2000);
+window.addEventListener('pagehide', save);
+
+/* ---------- clock, footer, toasts ---------- */
+const fmt = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${pad2(Math.floor(s / 3600))}:${pad2(Math.floor(s / 60) % 60)}:${pad2(s % 60)}`; };
+setInterval(() => { if (S.t0) $('#clock').textContent = fmt((S.t1 || Date.now()) - S.t0); }, 250);
+
+function updateFoot() {
+  if (cur < 1 || cur > 11) return;
+  $('#f-step').textContent = `STEP ${pad2(cur)} / 11`;
+  $('#f-bar').style.width = ((cur - 1) / 11 * 100) + '%';
+  $('#f-eta').textContent = `ETA ${2 + cur * cur} MIN`;
+}
+
+let toastT;
+function toast(msg, ms = 3600) {
+  const t = $('#toast');
+  t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), ms);
+}
+const LIES = [
+  'Progress autosaved.*', '*Autosave is a lie.', 'Someone in M314 just finished. Hurry.',
+  'Your session expires in 4 minutes. Maybe.', 'This form is WCAG compliant (citation needed).',
+  'Fun fact: the average user gives up around here.', 'Tip: blinking less improves form performance.',
+  'We value your time. Not much, but we value it.'
+];
+setInterval(() => {
+  if (cur >= 1 && cur <= 11 && !$('#toast').classList.contains('on') && Math.random() < .6) toast(pick(LIES));
+}, 32000);
+
+function clearHash() {
+  try { history.replaceState(null, '', location.href.split('#')[0]); } catch (e) { /* file:// quirks */ }
+}
+
+/* ---------- INTRO ---------- */
+$('#begin').onclick = () => { clearHash(); S.t0 = Date.now(); next(); };
+
+/* ---------- 01 NAME ---------- */
+let heardName = '';
+function readName() {
+  let raw = location.hash.slice(1);
+  try { raw = decodeURIComponent(raw); } catch (e) {}
+  const n = raw.replace(/[+_]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 28);
+  heardName = n;
+  const ok = /[a-z].*[a-z]/i.test(n);
+  $('#name-out').textContent = n || '—';
+  $('#name-out').classList.toggle('empty', !n);
+  $('#addr-hash').textContent = '#' + (n || '');
+  $('#name-ok').disabled = !ok;
+  $('#name-note').textContent = !n ? 'Waiting for the address bar…'
+    : /\d/.test(n) ? 'Numbers in a name. Bold choice. We allow it.'
+    : ok ? 'Is that you? Lovely. Probably.' : 'Two letters minimum. We have standards.';
+}
+hooks.name = {
+  enter() {
+    const u = location.href.split('#')[0];
+    $('#addr-url').textContent = u.length > 34 ? '…' + u.slice(-33) : u;
+    readName(); window.addEventListener('hashchange', readName);
+  },
+  exit() { window.removeEventListener('hashchange', readName); }
+};
+function makeTypo(n) {
+  const a = [...n];
+  for (let i = 1; i < a.length - 1; i++) {
+    if (/[a-z]/i.test(a[i]) && /[a-z]/i.test(a[i + 1]) && a[i].toLowerCase() !== a[i + 1].toLowerCase()) {
+      [a[i], a[i + 1]] = [a[i + 1], a[i]]; return a.join('');
+    }
+  }
+  return n + 'h';
+}
+$('#name-ok').onclick = () => { S.name = heardName; S.typo = makeTypo(heardName); toast(`Hello, ${heardName}. We'll remember that. Mostly.`); next(); };
+
+/* ---------- 02 AGE ---------- */
+function updAge() {
+  const w = window.innerWidth, a = Math.round(w / 40);
+  $('#age-out').textContent = pad2(a);
+  $('#age-math').textContent = `${w}px ÷ 40 = ${a}`;
+  const ok = a >= 16 && a <= 30;
+  $('#age-ok').disabled = !ok;
+  $('#age-note').textContent = a > 30 ? `${a}? This event is for students. Shrink the window.`
+    : a < 16 ? 'Too young to be filling in forms. Widen the window.'
+    : `You are ${a}. We'll take your word for it.`;
+}
+hooks.age = { enter() { updAge(); window.addEventListener('resize', updAge); }, exit() { window.removeEventListener('resize', updAge); } };
+$('#age-ok').onclick = () => { updAge(); if ($('#age-ok').disabled) return; S.age = Math.round(window.innerWidth / 40); toast(`Age locked at ${S.age}. Please keep the window this size forever.`); next(); };
+
+/* ---------- 03 VOLUME ---------- */
+// devicePixelRatio = OS scaling × browser zoom. Estimate the zoom at load from the
+// window/viewport ratio (snapped to Chrome's zoom steps) so a reload while zoomed still works.
+const ZOOMS = [25, 33, 50, 67, 75, 80, 90, 100, 110, 125, 150, 175, 200, 250, 300, 400, 500];
+const snapZoom = v => ZOOMS.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a);
+const estZoom = () => (window.outerWidth && window.innerWidth) ? snapZoom((window.outerWidth - 16) / window.innerWidth * 100) : 100;
+const baseDPR = (window.devicePixelRatio || 1) / (estZoom() / 100);
+const zoomPct = () => Math.round((window.devicePixelRatio || 1) / baseDPR * 100);
+const volPos = v => (Math.min(200, Math.max(25, v)) - 25) / 175 * 100;
+let volT, volPhase = 0, volHold = 0;
+function renderVol(v) {
+  $('#vol-out').textContent = v;
+  $('#vol-knob').style.left = volPos(v) + '%';
+  $('#vol-fill').style.width = volPos(v) + '%';
+  $('#vol-range').value = v;
+}
+hooks.volume = {
+  enter() {
+    volPhase = 0; volHold = 0;
+    $('#vol-tgt').style.left = volPos(67) + '%';
+    volT = setInterval(() => {
+      const v = zoomPct(); renderVol(v);
+      if (volPhase === 0) {
+        if (v === 67) { volHold += 120; if (volHold >= 700) {
+          volPhase = 1;
+          $('#vol-tgt').style.left = volPos(100) + '%'; $('#vol-tgt').dataset.l = 'NOW 100';
+          $('#vol-note').textContent = '67. Gorgeous. Now set it back to 100, so you can actually read the rest of this form.';
+          toast('Volume saved: 67.');
+        } } else { volHold = 0; $('#vol-note').textContent = v < 67 ? 'Too quiet. Go up a little.' : v > 67 ? 'Too loud. Go down.' : ''; }
+      } else if (volPhase === 1) {
+        if (v === 100) { volPhase = 2; $('#vol-ok').disabled = false; $('#vol-note').textContent = 'Perfect. Your volume is 67. (Displayed as 100 for your comfort.)'; }
+        else $('#vol-note').textContent = '67. Gorgeous. Now set it back to 100, so you can actually read the rest of this form.';
+      }
+    }, 120);
+  },
+  exit() { clearInterval(volT); }
+};
+let volSnap;
+$('#vol-range').addEventListener('input', () => {
+  $('#vol-note').textContent = 'That slider is decorative. Use zoom.';
+  clearTimeout(volSnap); volSnap = setTimeout(() => renderVol(zoomPct()), 250);
+});
+$('#vol-ok').onclick = next;
+
+/* ---------- 04 PHONE (dog) ---------- */
+const KEYS = ['1','2','3','4','5','6','7','8','9','⌫','0','OK'];
+$('#phone-pad').innerHTML = KEYS.map(k => `<div class="pkey${k === 'OK' ? ' ok' : ''}" data-k="${k}">${k}</div>`).join('');
+const dog = { x: 0, y: 0, mx: 0, my: 0, face: 1, raf: 0, sq: null, sqT: 0 };
+let phoneTarget = '';
+const fmtPhone = p => p.slice(0, 5) + ' ' + p.slice(5);
+function renderPhone() {
+  const d = S.phone.padEnd(10, '·');
+  $('#phone-out').innerHTML = [...d].map((c, i) => (i === 5 ? ' ' : '') +
+    (c === '·' ? '<span class="ph">_</span>' : c === phoneTarget[i] ? c : `<span class="bad">${c}</span>`)).join('');
+}
+function dogLoop() {
+  const tx = dog.sq ? dog.sq.x : dog.mx, ty = dog.sq ? dog.sq.y : dog.my + 28;
+  const k = dog.sq ? .12 : .045;
+  const vx = (tx - dog.x) * k;
+  dog.x += vx; dog.y += (ty - dog.y) * k;
+  if (Math.abs(vx) > .4) dog.face = vx > 0 ? 1 : -1;
+  const el = $('#dog');
+  el.style.transform = `translate(${dog.x - 38}px, ${dog.y - 26}px)`;
+  el.querySelector('svg').style.transform = `scaleX(${dog.face})`;
+  const cx = dog.x - 4 * dog.face, cy = dog.y - 4;
+  $('#leash-path').setAttribute('d', `M${dog.mx} ${dog.my} Q ${(dog.mx + cx) / 2} ${Math.max(dog.my, cy) + 60} ${cx} ${cy}`);
+  dog.raf = requestAnimationFrame(dogLoop);
+}
+function scheduleSquirrel() {
+  dog.sqT = setTimeout(() => {
+    const keys = $$('#phone-pad .pkey');
+    const r = pick(keys).getBoundingClientRect();
+    dog.sq = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    S.stats.squirrels++;
+    const sq = $('#squirrel'); sq.style.display = 'block';
+    sq.style.transform = `translate(${dog.sq.x - 23}px, ${dog.sq.y - 40}px)`;
+    $('#phone-note').textContent = pick(['SQUIRREL!', 'He saw a squirrel.', 'Not again.', 'He is very sorry. He is not sorry.']);
+    dog.sqT = setTimeout(() => { dog.sq = null; sq.style.display = 'none'; scheduleSquirrel(); }, 1900);
+  }, 4200 + Math.random() * 3800);
+}
+function dogMove(e) { dog.mx = e.clientX; dog.my = e.clientY; }
+function dogClick(e) {
+  if (e.button !== 0) return;
+  e.preventDefault();
+  const w = $('#woof'); w.classList.remove('on'); void w.offsetWidth; w.classList.add('on');
+  const el = document.elementFromPoint(dog.x, dog.y);
+  const key = el && el.closest('#phone-pad .pkey');
+  if (!key) return;
+  key.classList.add('hit'); setTimeout(() => key.classList.remove('hit'), 220);
+  const k = key.dataset.k;
+  if (k === '⌫') S.phone = S.phone.slice(0, -1);
+  else if (k === 'OK') {
+    if (S.phone === phoneTarget) { toast('Number confirmed. The dog would like a treat.'); next(); return; }
+    $('#phone-note').textContent = S.phone.length < 10 ? `That's ${S.phone.length} digits. We need 10. This is India.`
+      : 'That is not the number you gave us. The dog insists it is. Fix the orange ones.';
+  } else if (S.phone.length < 10) S.phone += k;
+  renderPhone();
+}
+function startDog() {
+    $('#phone-ask').style.display = 'none'; $('#phone-stage').style.display = '';
+    $('#phone-lede').innerHTML = 'Thanks! Now please <b>confirm it</b>. Our data-entry intern is a dog, and <b>he does the clicking</b>. You hold the leash. Click anywhere and he presses whatever he\'s standing on. He is easily distracted by squirrels.';
+    $('#phone-target').textContent = '+91 ' + fmtPhone(phoneTarget);
+    S.phone = ''; renderPhone();
+    const r = $('#phone-pad').getBoundingClientRect();
+    dog.x = dog.mx = r.left + r.width / 2; dog.y = r.top + r.height / 2; dog.my = dog.y - 28;
+    $('#dog').style.display = 'block'; $('#leash').style.display = 'block';
+    document.addEventListener('mousemove', dogMove);
+    document.addEventListener('mousedown', dogClick);
+    dog.raf = requestAnimationFrame(dogLoop);
+    scheduleSquirrel();
+}
+function phoneNext() {
+  const v = $('#phone-in').value.replace(/\D/g, '');
+  if (v.length !== 10) { $('#phone-err').textContent = `${v.length} digits? Indian numbers have 10.`; return; }
+  phoneTarget = v;
+  toast('See? Normal. Anyway…');
+  setTimeout(startDog, 50);
+}
+$('#phone-next').onclick = phoneNext;
+$('#phone-in').addEventListener('keydown', e => { if (e.key === 'Enter') phoneNext(); });
+hooks.phone = {
+  enter() {
+    phoneTarget = ''; S.phone = '';
+    $('#phone-ask').style.display = ''; $('#phone-stage').style.display = 'none';
+    $('#phone-in').value = ''; $('#phone-err').textContent = '';
+    $('#phone-lede').innerHTML = 'Just type your phone number. That\'s it. A completely normal field. <b>We promise.</b>';
+    setTimeout(() => $('#phone-in').focus(), 300);
+  },
+  exit() {
+    cancelAnimationFrame(dog.raf); clearTimeout(dog.sqT); dog.sq = null;
+    document.removeEventListener('mousemove', dogMove);
+    document.removeEventListener('mousedown', dogClick);
+    $('#dog').style.display = 'none'; $('#leash').style.display = 'none'; $('#squirrel').style.display = 'none';
+  }
+};
+
+/* ---------- 05 ROBOT ---------- */
+const BOTS = 300;
+$('#botgrid').innerHTML = Array.from({ length: BOTS }, () => '<input type="checkbox" aria-label="robot box">').join('');
+const boxes = $$('#botgrid input');
+let botT, botFirst = null, botDone = false, botFailed = false;
+const HINTS = [
+  '',
+  '',
+  'Robots don\'t use mice. They use the <b>console</b>. <span class="key-cap">F12</span>',
+  'Robots don\'t use mice. They use the <b>console</b>. <span class="key-cap">F12</span><br>The boxes live in <code>#botgrid</code>. You\'re a CS student. You know what to do.',
+  'Fine. Press Reset, then: <code>document.querySelectorAll(\'#botgrid input\').forEach(b =&gt; b.click())</code>'
+];
+function botPoll() {
+  const n = boxes.reduce((c, b) => c + b.checked, 0);
+  $('#bot-count').textContent = n;
+  if (botDone || botFailed) return;
+  if (n === 0) { botFirst = null; $('#bot-drain').style.width = '0'; return; }
+  const now = performance.now();
+  if (botFirst === null) botFirst = now;
+  const dt = now - botFirst;
+  $('#bot-drain').style.width = Math.min(100, dt / 10) + '%';
+  if (n === BOTS && dt <= 1000) {
+    botDone = true;
+    $('#bot-verdict').textContent = 'Beep boop. Verified robot.';
+    $('#bot-ok').style.display = '';
+    $('#bot-drain').style.width = '100%';
+  } else if (dt > 1000) {
+    S.stats.bot++;
+    botFailed = true;
+    $('#bot-att').textContent = S.stats.bot;
+    $('#bot-drain').style.width = '100%';
+    $('#bot-reset').style.display = '';
+    $('#bot-verdict').textContent = pick(['Too human.', 'Suspiciously human.', 'We detected a pulse.', 'Organic behaviour detected.']);
+    const h = HINTS[Math.min(HINTS.length - 1, S.stats.bot)];
+    $('#bot-hint').innerHTML = h; $('#bot-hint').classList.toggle('on', !!h);
+  }
+}
+function botReset() {
+  boxes.forEach(b => b.checked = false);
+  botFirst = null; botFailed = false;
+  $('#bot-reset').style.display = 'none';
+  $('#bot-drain').style.width = '0';
+  $('#bot-count').textContent = 0;
+  $('#bot-verdict').textContent = 'Awaiting machine.';
+}
+$('#bot-reset').onclick = botReset;
+// Ticking more boxes after failing does nothing; you have to press Reset.
+$('#botgrid').addEventListener('change', () => { if (botFailed) $('#bot-verdict').textContent = 'Failed. Press Reset to try again.'; });
+hooks.robot = {
+  enter() {
+    botReset(); botDone = false; $('#bot-ok').style.display = 'none';
+    $('#bot-att').textContent = S.stats.bot;
+    botT = setInterval(botPoll, 40);
+    console.log('%cHello, robot.', 'font:32px Anton, Impact, sans-serif;color:#F23D0C');
+    console.log('%cHumans tick boxes by hand. Robots… don\'t.', 'font:14px monospace;color:#888');
+  },
+  exit() { clearInterval(botT); }
+};
+$('#bot-ok').onclick = next;
+
+/* ---------- 06 OTP ---------- */
+const OTP = '4132';
+const isMac = /Mac/i.test(navigator.platform || '');
+let otp = { digits: [], taps: 0, t: 0, busy: false };
+function renderOtp() {
+  $$('#otp-slots .slot').forEach((s, i) => {
+    s.classList.toggle('cur', i === otp.digits.length);
+    s.innerHTML = i < otp.digits.length ? otp.digits[i] : (i === otp.digits.length && otp.taps ? `<span class="pend">${otp.taps}</span>` : '');
+  });
+  $('#otp-taps').innerHTML = '<i></i>'.repeat(otp.taps);
+}
+function otpTap() {
+  if (otp.busy) return;
+  S.stats.caps++;
+  otp.taps = Math.min(9, otp.taps + 1);
+  renderOtp();
+  const ring = $('#otp-ring'); ring.classList.remove('run'); void ring.getBoundingClientRect(); ring.classList.add('run');
+  clearTimeout(otp.t);
+  otp.t = setTimeout(otpCommit, 1400);
+  $('#otp-note').textContent = 'Locking in…';
+}
+function otpCommit() {
+  $('#otp-ring').classList.remove('run');
+  otp.digits.push(otp.taps); otp.taps = 0; renderOtp();
+  if (otp.digits.length < 4) { $('#otp-note').textContent = `Digit ${otp.digits.length} locked. Next.`; return; }
+  if (otp.digits.join('') === OTP) {
+    $('#otp-note').textContent = 'Correct. Please remember to turn Caps Lock off. Or don\'t.';
+    otp.busy = true; setTimeout(next, 1300);
+  } else {
+    S.stats.otpFails++;
+    otp.busy = true;
+    $('#otp-slots').classList.add('shake');
+    $('#otp-note').textContent = S.stats.otpFails > 1 ? 'Incorrect. Hint: 9999 expired a long time ago.' : 'Incorrect OTP. Please try again.';
+    setTimeout(() => { $('#otp-slots').classList.remove('shake'); otp.digits = []; otp.busy = false; renderOtp(); }, 900);
+  }
+}
+function otpKey(e) { if (e.key === 'CapsLock' || e.code === 'CapsLock') otpTap(); }
+hooks.otp = {
+  enter() { otp = { digits: [], taps: 0, t: 0, busy: false }; renderOtp(); document.addEventListener('keydown', otpKey); if (isMac) document.addEventListener('keyup', otpKey); },
+  exit() { clearTimeout(otp.t); document.removeEventListener('keydown', otpKey); document.removeEventListener('keyup', otpKey); }
+};
+
+/* ---------- 07 SHOUT ---------- */
+$('#meter').innerHTML = '<i></i>'.repeat(28);
+const bars = $$('#meter i');
+let sh = { prog: 0, raf: 0, stream: null, ctx: null, mash: false, done: false, altT: 0 };
+function setShout(level, prog) {
+  const lit = Math.round(Math.min(1.4, level) / 1.4 * bars.length);
+  bars.forEach((b, i) => { b.classList.toggle('on', i < lit); b.classList.toggle('hot', i < lit && i >= bars.length * .72); b.style.height = (22 + i / bars.length * 78) + '%'; });
+  $('#shout-prog').style.width = Math.min(100, prog * 100) + '%';
+  const w = $('#shout-word');
+  w.textContent = level < .25 ? 'Silence.' : level < .6 ? 'Whisper.' : level < 1 ? 'Louder.' : 'LOUDER!!';
+  w.style.transform = `scale(${1 + Math.min(level, 1.6) * .18})`;
+}
+function shoutWin() {
+  if (sh.done) return; sh.done = true;
+  setShout(0, 1);
+  $('#shout-word').textContent = 'Beautiful.';
+  $('#shout-note').textContent = 'Sincerity confirmed. Your classmates are staring.';
+  setTimeout(next, 1400);
+}
+async function startMic() {
+  $('#shout-mic').disabled = true;
+  clearTimeout(sh.altT);
+  sh.altT = setTimeout(() => { $('#shout-alt').style.display = ''; }, 12000);
+  try {
+    sh.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+  } catch (e) {
+    $('#shout-note').textContent = 'No microphone? Then you\'ll have to mash SPACE 100 times. Enthusiastically.';
+    startMash(); return;
+  }
+  sh.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const src = sh.ctx.createMediaStreamSource(sh.stream);
+  const an = sh.ctx.createAnalyser(); an.fftSize = 1024; src.connect(an);
+  const buf = new Float32Array(an.fftSize);
+  let frames = 0, amb = 0, thr = .08, last = performance.now();
+  $('#shout-note').textContent = 'Calibrating to the room…';
+  const loop = () => {
+    an.getFloatTimeDomainData(buf);
+    let s = 0; for (let i = 0; i < buf.length; i++) s += buf[i] * buf[i];
+    const rms = Math.sqrt(s / buf.length);
+    const now = performance.now(), dt = (now - last) / 1000; last = now;
+    frames++;
+    if (frames < 45) { amb += rms; sh.raf = requestAnimationFrame(loop); return; }
+    if (frames === 45) { thr = Math.min(.25, Math.max(.05, (amb / 44) * 5)); $('#shout-note').textContent = 'Go. Mean it.'; }
+    const level = rms / thr;
+    if (!sh.mash) {
+      sh.prog = level >= 1 ? sh.prog + dt / 2.5 : Math.max(0, sh.prog - dt * .12);
+      setShout(level, sh.prog);
+      if (sh.prog >= 1) return shoutWin();
+    }
+    sh.raf = requestAnimationFrame(loop);
+  };
+  sh.raf = requestAnimationFrame(loop);
+}
+function mashKey(e) {
+  if (e.code !== 'Space') return;
+  e.preventDefault();
+  if (e.repeat || sh.done) return;
+  sh.prog += 1 / 100;
+  setShout(1.2, sh.prog);
+  $('#shout-note').textContent = `${Math.round(sh.prog * 100)} / 100. Keep mashing.`;
+  setTimeout(() => !sh.done && setShout(0, sh.prog), 120);
+  if (sh.prog >= .999) shoutWin();
+}
+function startMash() {
+  if (sh.mash) return;
+  sh.mash = true; sh.prog = 0;
+  $('#shout-alt').style.display = 'none'; $('#shout-mic').style.display = 'none';
+  $('#shout-note').textContent = 'Mash SPACE 100 times. With feeling.';
+  document.addEventListener('keydown', mashKey);
+}
+function stopMic() {
+  cancelAnimationFrame(sh.raf);
+  if (sh.stream) sh.stream.getTracks().forEach(t => t.stop());
+  if (sh.ctx) sh.ctx.close().catch(() => {});
+  document.removeEventListener('keydown', mashKey);
+  clearTimeout(sh.altT);
+}
+hooks.shout = {
+  enter() { sh = { prog: 0, raf: 0, stream: null, ctx: null, mash: false, done: false, altT: 0 }; setShout(0, 0); $('#shout-mic').disabled = false; $('#shout-mic').style.display = ''; $('#shout-alt').style.display = 'none'; },
+  exit() { stopMic(); }
+};
+$('#shout-mic').onclick = startMic;
+$('#shout-alt').onclick = startMash;
+
+/* ---------- 08 TERMS (ten cursors) ---------- */
+const CUR_SVG = '<svg viewBox="-1 -1 14 21"><polygon points="0,0 0,16 4,12.4 7,18.6 9.6,17.4 6.7,11.4 11.6,11.4" fill="#0C0B0A" stroke="#FFF5E1" stroke-width="1.1" stroke-linejoin="round"/></svg>';
+const TF = [
+  (x, y) => [x, y],
+  (x, y, W, H) => [W - x, y],
+  (x, y, W, H) => [x, H - y],
+  (x, y, W, H) => [W - x, H - y],
+  (x, y, W, H, t, s) => { s.x = s.x == null ? x : s.x + (x - s.x) * .07; s.y = s.y == null ? y : s.y + (y - s.y) * .07; return [s.x, s.y]; },
+  (x, y, W, H) => [W / 2 + (x - W / 2) * 1.45, H / 2 + (y - H / 2) * 1.45],
+  (x, y, W, H) => [W / 2 + (x - W / 2) * .6, H / 2 + (y - H / 2) * .6],
+  (x, y, W, H) => [W / 2 - (y - H / 2) * (W / H), H / 2 + (x - W / 2) * (H / W)],
+  (x, y, W, H, t) => [x + 150 * Math.sin(t / 700), y + 90 * Math.cos(t / 560)],
+  (x, y, W, H) => [y / H * W, x / W * H]
+];
+let cz = { els: [], map: [], st: [], x: -100, y: -100, raf: 0, auto: 0, in: false, checked: false };
+function shuffleCursors(silent) {
+  cz.map = TF.map((_, i) => i).sort(() => Math.random() - .5);
+  cz.st = TF.map(() => ({}));
+  if (!silent) { S.stats.shuffles++; $('#tos-note').textContent = `Reshuffles: ${S.stats.shuffles}`; }
+}
+function curLoop(t) {
+  const W = window.innerWidth, H = window.innerHeight;
+  cz.els.forEach((el, i) => {
+    const f = TF[cz.map[i]];
+    const [x, y] = f(cz.x, cz.y, W, H, t, cz.st[i]);
+    el.style.transform = `translate(${x}px, ${y}px)`;
+    el.style.opacity = cz.in ? 1 : 0;
+  });
+  cz.raf = requestAnimationFrame(curLoop);
+}
+const curMove = e => { cz.x = e.clientX; cz.y = e.clientY; cz.in = true; };
+const curOut = e => { if (!e.relatedTarget) cz.in = false; };
+hooks.terms = {
+  enter() {
+    const layer = $('#cursors'); layer.innerHTML = CUR_SVG.repeat(10); layer.style.display = 'block';
+    cz.els = $$('svg', layer); shuffleCursors(true);
+    cz.checked = false; $('#tos-check').classList.remove('on'); $('#tos-check .box').textContent = '';
+    document.body.classList.add('nocur');
+    document.addEventListener('mousemove', curMove); document.addEventListener('mouseout', curOut);
+    cz.raf = requestAnimationFrame(curLoop);
+    cz.auto = setInterval(() => { shuffleCursors(); toast('Cursors reshuffled for your security.'); }, 20000);
+  },
+  exit() {
+    cancelAnimationFrame(cz.raf); clearInterval(cz.auto);
+    document.removeEventListener('mousemove', curMove); document.removeEventListener('mouseout', curOut);
+    document.body.classList.remove('nocur'); $('#cursors').style.display = 'none';
+  }
+};
+$('#tos-check').onclick = () => {
+  cz.checked = !cz.checked;
+  $('#tos-check').classList.toggle('on', cz.checked);
+  $('#tos-check .box').textContent = cz.checked ? '✓' : '';
+};
+$('#tos-agree').onclick = () => {
+  if (!cz.checked) { shuffleCursors(); toast('Tick the box first. Cursors reshuffled as punishment.'); return; }
+  toast('Agreement recorded. Legally binding-ish.'); next();
+};
+$('#tos-disagree').onclick = () => {
+  cz.checked = false; $('#tos-check').classList.remove('on'); $('#tos-check .box').textContent = '';
+  shuffleCursors(); toast('Disagreement noted. And ignored. Box unticked.');
+};
+
+/* ---------- 09 STAMP (second window) ---------- */
+const POP_HTML = `<!doctype html><html><head><meta charset="utf-8"><title>Official Stamp</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@600&display=swap" rel="stylesheet">
+<style>html,body{margin:0;height:100%;background:#F23D0C;color:#FFF5E1;font-family:Archivo,Arial,sans-serif;overflow:hidden;user-select:none}
+body{display:grid;place-items:center;text-align:center}
+.s{width:150px;height:150px;border-radius:50%;display:grid;place-items:center;transform:rotate(-12deg);box-shadow:inset 0 0 0 3px #FFF5E1,inset 0 0 0 9px #F23D0C,inset 0 0 0 11px #FFF5E1}
+.s b{display:block;font:400 32px/1 Anton,Impact,sans-serif;letter-spacing:.02em}.s small{display:block;font-size:8px;letter-spacing:.26em;margin-top:5px}
+#d{position:fixed;top:12px;left:0;right:0;font:400 20px Anton,Impact,sans-serif;letter-spacing:.06em}
+p{position:fixed;left:0;right:0;bottom:12px;margin:0;font-size:9px;letter-spacing:.22em;text-transform:uppercase;opacity:.85}</style></head>
+<body><div id="d">DRAG THIS WINDOW</div><div class="s"><div><b>APPROVED</b><small>FORMALITY® · M314</small></div></div><p>Drop me on the circle</p></body></html>`;
+let st = { pop: null, t: 0, hold: 0, done: false };
+function stampPoll() {
+  const p = st.pop;
+  if (!p || p.closed) {
+    if (!st.done) { $('#stamp-dist').textContent = '—'; $('#stamp-temp').innerHTML = '&nbsp;'; $('#stamp-open').style.display = ''; $('#stamp-note').textContent = 'Stamp window closed. It misses you.'; }
+    clearInterval(st.t); return;
+  }
+  try {
+    const z = (window.devicePixelRatio || 1) / baseDPR;
+    const r = $('#stamp-target').getBoundingClientRect();
+    const bw = (window.outerWidth - window.innerWidth * z) / 2;
+    const top = window.outerHeight - window.innerHeight * z - bw;
+    const tx = window.screenX + bw + (r.left + r.width / 2) * z;
+    const ty = window.screenY + top + (r.top + r.height / 2) * z;
+    const pbw = (p.outerWidth - p.innerWidth) / 2;
+    const ptop = p.outerHeight - p.innerHeight - pbw;
+    const px = p.screenX + pbw + p.innerWidth / 2;
+    const py = p.screenY + ptop + p.innerHeight / 2;
+    const d = Math.hypot(tx - px, ty - py);
+    $('#stamp-dist').textContent = Math.round(d) + ' px';
+    const word = d > 700 ? 'freezing' : d > 350 ? 'cold' : d > 140 ? 'warmer' : d > 50 ? 'hot hot hot' : 'hold still…';
+    $('#stamp-temp').textContent = word;
+    const dd = p.document.getElementById('d'); if (dd) dd.textContent = d <= 50 ? 'HOLD STILL…' : `${Math.round(d)} PX AWAY`;
+    if (d <= 50) { st.hold += 100; if (st.hold >= 1200) stamped(); } else st.hold = 0;
+  } catch (e) { $('#stamp-note').textContent = 'Your browser is hiding the stamp window from us. Try Chrome.'; }
+}
+function stamped() {
+  st.done = true; clearInterval(st.t);
+  try { st.pop.close(); } catch (e) {}
+  $('#stamp-target').classList.add('stamped');
+  $('#stamp-dist').textContent = '0 px'; $('#stamp-temp').textContent = 'approved.';
+  $('#stamp-note').textContent = 'Officially stamped. Frame it.';
+  $('#stamp-open').style.display = 'none'; $('#stamp-ok').style.display = '';
+}
+$('#stamp-open').onclick = () => {
+  const p = window.open('', 'formality-stamp', 'popup=yes,width=280,height=320,left=40,top=60');
+  if (!p) { $('#stamp-note').textContent = 'Pop-up blocked. Click the blocked-popup icon in the address bar, allow it, then try again.'; return; }
+  try { p.document.open(); p.document.write(POP_HTML); p.document.close(); } catch (e) {}
+  st.pop = p; st.hold = 0;
+  $('#stamp-open').style.display = 'none';
+  $('#stamp-note').textContent = 'Drag the stamp window by its title bar.';
+  clearInterval(st.t); st.t = setInterval(stampPoll, 100);
+};
+$('#stamp-ok').onclick = next;
+hooks.stamp = {
+  enter() { st.done = false; $('#stamp-target').classList.remove('stamped'); $('#stamp-ok').style.display = 'none'; $('#stamp-open').style.display = ''; },
+  exit() { clearInterval(st.t); try { st.pop && !st.pop.closed && st.pop.close(); } catch (e) {} }
+};
+
+/* ---------- 10 REVIEW (gaslight) ---------- */
+let rv = { disputed: false };
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function swapPhone(p) { if (p.length < 5) return p; const a = [...p]; [a[3], a[4]] = [a[4], a[3]]; if (a.join('') === p) a[7] = String((+a[7] + 1) % 10); return a.join(''); }
+hooks.review = {
+  enter() {
+    rv.disputed = false;
+    $('#r-name').innerHTML = esc(S.typo);
+    $('#r-age').innerHTML = `${S.age + 1} <em>rounded up</em>`;
+    const p = swapPhone(S.phone);
+    $('#r-phone').innerHTML = `${p.slice(0, 5)} ${p.slice(5)} <em>optimised</em>`;
+    $('#sign').value = ''; $('#sign-err').textContent = '';
+    $('#dispute').classList.remove('on'); $('#dispute-open').style.display = 'none'; $('#dispute-in').value = '';
+  }
+};
+const norm = s => s.trim().replace(/\s+/g, ' ').toLowerCase();
+function signIt() {
+  const v = norm($('#sign').value);
+  const rec = rv.disputed ? S.name : S.typo;
+  if (!v) { $('#sign-err').textContent = 'A blank signature? Bold.'; return; }
+  if (v === norm(rec)) { S.finalName = rec; toast(rv.disputed ? 'Signed. Our records were wrong. This never happened.' : `Signed as ${rec}. Lovely name.`); next(); return; }
+  if (!rv.disputed && v === norm(S.name)) {
+    $('#sign-err').textContent = `Signature doesn't match our records ("${S.typo}"). Our records are never wrong.`;
+    $('#dispute-open').style.display = '';
+  } else $('#sign-err').textContent = 'Signature does not match. Please sign exactly as it appears on record.';
+}
+$('#sign-ok').onclick = signIt;
+$('#sign').addEventListener('keydown', e => { if (e.key === 'Enter') signIt(); });
+$('#dispute-open').onclick = () => { $('#dispute').classList.add('on'); $('#dispute-open').style.display = 'none'; $('#dispute-in').focus(); };
+$('#dispute-in').addEventListener('input', () => {
+  if (norm($('#dispute-in').value) === norm([...S.name].reverse().join(''))) {
+    rv.disputed = true;
+    $('#r-name').innerHTML = `<s>${esc(S.typo)}</s>${esc(S.name)}`;
+    $('#dispute').classList.remove('on');
+    $('#sign-err').textContent = '';
+    $('#sign').value = ''; $('#sign').focus();
+    toast('Record corrected. Reluctantly.');
+  }
+});
+
+/* ---------- 11 SUBMIT (print) ---------- */
+const CODE_CHARS = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+let subCode = '';
+function newCode() {
+  subCode = Array.from({ length: 6 }, () => pick([...CODE_CHARS])).join('');
+  $('#r-code').textContent = subCode;
+}
+function onBeforePrint() {
+  if (cur !== ORDER.indexOf('submit')) return;
+  S.stats.prints++;
+  newCode();
+  if (S.stats.prints > 1) $('#code-note').textContent = 'New printout, new code. The old one has been shredded.';
+}
+window.addEventListener('beforeprint', onBeforePrint);
+function submitCode() {
+  const v = $('#code-in').value.trim().toUpperCase();
+  if (!subCode) { $('#code-err').textContent = 'You haven\'t printed anything yet. Ctrl + P.'; return; }
+  if (v === subCode) { toast('Submitted. A printer somewhere sighs.'); next(); return; }
+  $('#code-err').textContent = /[O0IL1]/.test(v) ? 'Incorrect. Our codes never contain O, 0, I, L or 1. For clarity.' : 'Incorrect code. Did you print the latest one?';
+}
+$('#code-ok').onclick = submitCode;
+$('#code-in').addEventListener('keydown', e => { if (e.key === 'Enter') submitCode(); });
+hooks.submit = {
+  enter() { subCode = ''; $('#code-in').value = ''; $('#code-err').textContent = ''; $('#code-note').textContent = 'No code on screen. Obviously.'; }
+};
+
+/* ---------- DONE ---------- */
+function renderFinal() {
+  const name = S.finalName || S.name || 'Stranger';
+  $('#clock').textContent = fmt(S.t1 - S.t0);
+  $('#done-welcome').textContent = `Welcome aboard, ${name}. It only took ${fmt(S.t1 - S.t0)}. Your registration has been filed in a cabinet we will never open.`;
+  const rows = [
+    ['Time suffered', fmt(S.t1 - S.t0)], ['Robot attempts', S.stats.bot], ['Squirrels chased', S.stats.squirrels],
+    ['Cursor reshuffles', S.stats.shuffles], ['Caps Lock taps', S.stats.caps], ['Pages printed', S.stats.prints]
+  ];
+  $('#stats').innerHTML = rows.map(([k, v]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+}
+hooks.done = {
+  enter() {
+    if (S.t1) { renderFinal(); return; }
+    const ex = $('#expired');
+    ex.classList.add('on'); $('#exp-h').innerHTML = 'Session<br>expired'; $('#exp-h').className = '';
+    let n = 5;
+    const tick = () => {
+      if (n > 0) { $('#exp-p').textContent = `Restarting from step 01 in ${n}…`; n--; setTimeout(tick, 1000); return; }
+      $('#exp-h').innerHTML = '…kidding.'; $('#exp-h').className = 'kid'; $('#exp-p').textContent = '';
+      setTimeout(() => {
+        ex.classList.remove('on');
+        S.t1 = Date.now(); save();
+        renderFinal();
+      }, 1500);
+    };
+    $('#done-welcome').textContent = ''; $('#stats').innerHTML = '';
+    setTimeout(tick, 200);
+  }
+};
+$('#again').onclick = () => { forget(); clearHash(); location.reload(); };
+
+/* ---------- boot ---------- */
+// Organisers: open the page with ?reset to wipe a half-finished run for the next player.
+let saved = null;
+try {
+  if (new URLSearchParams(location.search).has('reset')) { forget(); history.replaceState(null, '', location.pathname); }
+  else saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+} catch (e) { saved = null; }
+if (saved && saved.cur > 0 && saved.cur < ORDER.length && saved.S) {
+  Object.assign(S, saved.S, { stats: Object.assign({}, S.stats, saved.S.stats) });
+  goTo(saved.cur);
+  if (saved.cur < ORDER.length - 1) setTimeout(() => toast('Welcome back. Reloading won\'t save you. The clock kept running.'), 600);
+} else goTo(0);
+})();
+</script>
+</body>
+</html>
