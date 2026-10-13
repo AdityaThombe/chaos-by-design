@@ -16,8 +16,8 @@ Then open <http://localhost:5517> in Chrome.
 
 - An attempt survives reloads, and the clock keeps running.
 - Open <http://localhost:5517/?reset> to clear a half-finished attempt.
-- "New attempt" on the ticket screen starts a fresh, re-randomised hall.
-- The start screen keeps a practice log of your times on that laptop.
+- "Book again" on the confirmation page starts a fresh, re-randomised attempt.
+- The confirmation page shows your best time on that laptop, for practice.
 
 ## What it is
 
