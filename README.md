@@ -34,7 +34,7 @@ Movie page → **Sign in** → **Age check** → **Alert volume** → Showtimes 
 | Seat map | **Biscuit the usher dog does the clicking.** He follows your cursor slowly and clicks what he's standing on. Popcorn distracts him. |
 | Seat map | Other customers book or hold seats near the dog in real time. F12 always gets held once when the dog gets close. The layout and numbering are randomised every attempt. |
 | Pay | You have to **hold** the button. Letting go resets it. |
-| Bot check | "Tick **200 boxes in 1 second**." A big, friendly tip says to paste a snippet in the console, with a Copy button. **It's a trap:** doing that gets you flagged as a scalper bot. Ticking by hand is always too slow, and every fail needs a manual **Reset**. The real way through is a tiny grey **"i'm a human, let me through"** link in the bottom-right corner. Hints toward it only appear after 3 and 5 failures. |
+| Bot check | "Tick **200 boxes in 1 second**." A big, friendly tip says to paste a snippet in the console, with a Copy button. **It's a trap:** doing that gets you flagged as a scalper bot. Ticking by hand is always too slow, and every fail needs a manual **Reset**. The real way through: **one of the 200 boxes is round**, at a random spot each attempt. Tick **only that one**. Hints toward it only appear after 3 and 5 failures. |
 | Review | Our records say you booked the wrong seat (random every attempt). The only way to dispute it is a tiny grey "report an issue" link, where you type the correct seat **backwards**. |
 | Terms | **Ten cursors**, only one real. They reshuffle on mistakes and every 8 seconds. |
 | OTP | The OTP appears in the **browser tab title**. You type it by tapping **Caps Lock**. |
@@ -49,7 +49,7 @@ Everything is solvable: no dead ends, no invisible hitboxes, no fake success scr
 4. Click any **showtime** → choose **1** → **Select Seats**.
 5. Keep your cursor just **above** F12. When the dog's tag says **F12**, click. If F12 is striped, wait about 2.5 seconds and click again.
 6. **Hold Pay** until the bar fills.
-7. **Bot check:** ignore the tip. Click the tiny **i'm a human, let me through** link in the bottom-right corner.
+7. **Bot check:** ignore the tip. Scan the grid for the **round** box and tick only that one.
 8. **Review:** click the tiny **report an issue** link (bottom right) → type `21F`, then **Looks good, continue**.
 9. **Terms:** wiggle the mouse to spot the real cursor, tick the box, then **Agree & continue**.
 10. **OTP:** read the 2 digits in the tab title and tap Caps Lock that many times for each, pausing between digits.

@@ -249,6 +249,7 @@ a{color:inherit;text-decoration:none}
 .agebig{font:400 120px/1 var(--display);color:var(--brand)}
 .botgrid{display:grid;grid-template-columns:repeat(25,1fr);gap:3px;margin:4px 0 10px}
 .botgrid input{-webkit-appearance:none;appearance:none;margin:0;width:100%;aspect-ratio:1;border:1.5px solid #c4c4c8;border-radius:3px;cursor:pointer;background:#fff}
+.botgrid input.odd{border-radius:50%}
 .botgrid input:checked{background:var(--green);border-color:var(--green)}
 .drain{height:4px;background:#eee;border-radius:2px;overflow:hidden}.drain i{display:block;height:100%;width:0;background:var(--brand)}
 .botrow{display:flex;justify-content:space-between;font-size:13px;margin:10px 0;color:var(--sub)}
@@ -439,7 +440,7 @@ body.nocur, body.nocur *{cursor:none !important}
         <div class="drain"><i id="bot-drain"></i></div>
         <div class="botrow"><span id="bot-verdict">Waiting…</span><span>Attempts <b id="bot-att">0</b></span></div>
         <div class="fine" id="bot-hint"></div>
-        <div class="btnrow"><button class="go2 ghost" id="bot-reset" style="display:none">Reset ↺</button><button class="tiny" id="bot-human">i'm a human, let me through</button></div>
+        <div class="btnrow"><button class="go2 ghost" id="bot-reset" style="display:none">Reset ↺</button></div>
       </div>
 
       <div class="pane" id="ck-review">
@@ -849,12 +850,20 @@ $('#botgrid').innerHTML = '<input type="checkbox" aria-label="box">'.repeat(BOTS
 const boxes = $$('#botgrid input');
 const bot = { t: 0, first: null, failed: false, done: false };
 // The tip is bait: doing what it says gets you flagged as a bot. Humans use the tiny link.
-const HINTS = ['', '', '', 'Psst. Humans read the fine print.', 'Psst. Humans read the fine print.', 'Look at the very bottom of this box. Smaller. Further right.'];
+// The real way through: one box is round. Tick only that one.
+const HINTS = ['', '', '', 'Psst. Humans spot the odd one out.', 'Psst. Humans spot the odd one out.', 'One of these boxes is not like the others. Tick only that one.'];
+let oddIdx = 0;
 function showHint() { const h = HINTS[Math.min(HINTS.length - 1, run.botFails || 0)]; $('#bot-hint').innerHTML = h; $('#bot-hint').classList.toggle('on', !!h); }
 function botReset() { boxes.forEach(b => b.checked = false); bot.first = null; bot.failed = false; $('#bot-reset').style.display = 'none'; $('#bot-drain').style.width = '0'; $('#bot-verdict').textContent = 'Waiting…'; }
 function botPoll() {
   if (bot.done || bot.failed) return;
   const n = boxes.reduce((c, b) => c + b.checked, 0);
+  if (n === 1 && boxes[oddIdx].checked) {
+    bot.done = true; clearInterval(bot.t);
+    $('#bot-verdict').textContent = 'Human detected. Welcome. (The boxes were a trap.)';
+    setTimeout(() => ckGo('review'), 500);
+    return;
+  }
   if (!n) { bot.first = null; $('#bot-drain').style.width = '0'; return; }
   const now = performance.now(); if (bot.first === null) bot.first = now;
   const dt = now - bot.first;
@@ -870,12 +879,13 @@ function botPoll() {
 }
 $('#botgrid').addEventListener('change', () => { if (bot.failed) $('#bot-verdict').textContent = 'Failed. Press Reset to try again.'; });
 $('#bot-reset').onclick = botReset;
-$('#bot-human').onclick = () => { bot.done = true; clearInterval(bot.t); toast('Welcome, human. (The boxes were a trap.)'); ckGo('review'); };
 $('#bait-copy').onclick = () => {
   const t = $('#bait-code').textContent;
   try { navigator.clipboard.writeText(t).then(() => toast('Copied. Now press F12 and paste it in the Console.')); } catch (e) { toast('Select the code and press Ctrl + C.'); }
 };
 function botStart() {
+  if (boxes[oddIdx]) boxes[oddIdx].classList.remove('odd');
+  oddIdx = Math.floor(Math.random() * BOTS); boxes[oddIdx].classList.add('odd');
   botReset(); bot.done = false; $('#bot-att').textContent = run.botFails || 0; showHint();
   clearInterval(bot.t); bot.t = setInterval(botPoll, 40);
   console.log('%cHello, robot.', 'font:28px Anton, Impact, sans-serif;color:#F23D0C');
