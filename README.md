@@ -36,7 +36,7 @@ Movie page → Showtimes → **Seat map** → **Hold to book** → Checkout: **A
 | Identity | Type `#` + **your username** at the end of the URL in the address bar. |
 | Age | Age = **window width ÷ 40**, must be 13–30. |
 | Mobile | A valid Indian mobile number (starts 6–9, 10 digits) → Send OTP. The OTP appears in the **browser tab title** and you type it by tapping **Caps Lock**. |
-| Security | An **"I'm not a robot"** checkbox opens a SnatchGuard grid. The rule (*"To proof you are human, click all the circles"*) is buried in a ~500-word **Instructions** page that vanishes as you click. 8 circles hide among ~45 rounded-square decoys. A wrong Verify locks the grid until **Refresh**. |
+| Security | An **"I'm not a robot"** checkbox opens a SnatchGuard grid. The rule (*"To proof you are human, click all the circles"*) is buried in a ~500-word **Instructions** page that vanishes as you click. 4 circles hide among ~45 rounded-square decoys. A wrong Verify locks the grid until **Refresh**. |
 
 ### The 8 password rules
 
@@ -64,7 +64,7 @@ Everything is solvable: no dead ends, no invisible hitboxes, no fake success scr
 7. Address bar → `End` → type `#abc` → `Enter`. It moves on by itself.
 8. **Win + ←** (snap to half the screen) → **Verify age**.
 9. Mobile `9876543210` → **Send OTP** → read the 2 digits in the tab title → tap Caps Lock that many times for each, pausing between digits.
-10. Tick **I'm not a robot** → click the circles at **r1c7, r2c13, r3c3, r4c10, r6c5, r7c15, r8c8, r10c2** → **Verify**.
+10. Tick **I'm not a robot** → click the 4 circles at **r1c7, r4c10, r7c15, r10c2** → **Verify**.
 
 **Before the judge or the neighbouring team plays:** maximise the window again and open `localhost:5517/?reset`.
 

@@ -1006,8 +1006,8 @@ $('#ph-in').addEventListener('keydown', e => { if (e.key === 'Enter') $('#ph-sen
 
 /* 1. "I'm not a robot" → SnatchGuard grid. The rule ("click all the circles") is only in the instructions. */
 const G_COLS = 16, G_ROWS = 10;
-// fixed circle positions (row, col from 1): r1c7 r2c13 r3c3 r4c10 r6c5 r7c15 r8c8 r10c2
-const G_CIRCLES = [6, 28, 34, 57, 84, 110, 119, 145];
+// fixed circle positions (row, col from 1): r1c7 r4c10 r7c15 r10c2
+const G_CIRCLES = [6, 57, 110, 145];
 // ~45 decoys in fixed spots (same seed every load): rounded squares, some almost round
 const G_DECOYS = (() => {
   const rng = mulberry32(42), out = new Map();
