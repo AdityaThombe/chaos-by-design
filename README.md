@@ -1,4 +1,4 @@
-# Ciné Chaos: Seat F12
+# SeatSnatch: Seat F12
 
 Our entry for **CSI-VIT's _Chaos by Design_**, problem statement 3:
 
@@ -19,30 +19,30 @@ Then open <http://localhost:5517> in Chrome.
 - "New attempt" on the ticket screen starts a fresh, re-randomised hall.
 - The start screen keeps a practice log of your times on that laptop.
 
-## What makes it slow
+## What it is
 
-| Mechanic | What happens |
+**SeatSnatch** is a parody movie-ticket site. You go Movie page → Showtimes → "How many seats?" → Seat map → Pay → OTP → Ticket. Every step looks normal, and most of them aren't.
+
+| Where | The catch |
 |---|---|
-| Lights off | You only see the seats near your cursor (a torch). The torch dims when you stop moving, so shake the mouse to recharge it. |
-| Real-cinema rows | Row letters skip **I** and **O**, like real cinemas. They're painted on one side wall only, and only visible in torchlight. |
-| Random every attempt | The screen can be at the top or the bottom (row A is always nearest the screen). The aisle layout and the seat numbering scheme change too: left→right, right→left, zig-zag, or odds on one side and evens on the other. Watching someone else's run doesn't give the answer away. |
-| Slow labels | A seat's label appears only after you hover it for about half a second. |
-| Other customers | People book seats, or put them on hold, near your cursor in real time. The first time you get close to F12, someone else holds it for about 4 seconds. |
-| Complimentary friends | Selecting a seat also selects its free neighbours on both sides. Click them again to deselect them. |
-| Hold to confirm | You have to hold Confirm for 2.5 seconds. Letting go early jams the ticket printer. Confirming the wrong seat cancels the booking and the clock keeps running. |
+| How many seats? | The ticket count defaults to **4**. Picking a seat grabs that many seats in a row, like real sites do. The test needs F12 on its own, so you have to change the count to 1. |
+| Seat map | **Biscuit the usher dog does the clicking.** He follows your cursor slowly on a leash and presses whatever seat he's standing on. Now and then popcorn appears and he runs after it. |
+| Seat map | Other customers book or hold seats near the dog in real time. The first time the dog gets close to F12, someone holds it for about 4 seconds. |
+| Seat map | Randomised every attempt: row A can be at the back or the front, the aisle layouts change, and seat numbers run left→right or right→left, sometimes skipping numbers across the aisles. |
+| Pay | Hold the pay button for 2.2 seconds. Let go early and it resets. Paying for anything other than F12 alone is declined, and the clock keeps running. |
+| OTP | The OTP is sent to the **browser tab title**. You type it by tapping **Caps Lock** once per number. |
 
 Everything is solvable: no dead ends, no invisible hitboxes, no fake success screens, no flashing and no sound.
 
 ## How to do it in under a minute (the proof run)
 
-1. Keep the mouse moving so the torch stays bright.
-2. Find which wall has the row letters and where the screen is, then sweep along that wall to row **F**.
-3. Hover any free seat in row F and read its number. Hover one more to work out which direction the numbers run, then jump to 12.
-4. If F12 is "on hold", wait about 4 seconds.
-5. Click F12, then click the friends it added to deselect them.
-6. Hold **Confirm F12** until the bar fills.
+1. **Book tickets** → click any showtime → choose **1** → **Select Seats**.
+2. Find F12. Keep your cursor just **above** the seat; the dog walks below it. When the dog's tag says **F12**, click.
+3. If F12 is on hold (striped), wait about 4 seconds.
+4. Hold **Pay** until the bar fills.
+5. Read the 3-digit OTP in the tab title. Tap Caps Lock that many times for each digit, pausing between digits.
 
-Practised, this takes about 20–30 seconds.
+Practised, this takes about 25–35 seconds.
 
 ---
 
